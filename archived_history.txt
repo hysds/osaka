@@ -1,0 +1,748 @@
+commit 6065bfae6925eadb041f89ac227eaee740f4ffa9
+Merge: ea4f0f4 4a3caa8
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 3 10:11:22 2017 -0700
+
+    Merge pull request #3 from hysds-org/mstarch-ftp
+    
+    mstarch: Adding in FTP pull
+
+commit 4a3caa8f2cba12be63ff462ba90f2a42c8d449d2
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Sep 11 23:21:12 2017 +0000
+
+    mstarch: better lock-file test, better FTP
+
+commit 27810e2fa0dee1c59a5c001ad57f59bcc33c648b
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Sep 11 19:17:19 2017 +0000
+
+    mstarch: better lock file naming, listing, and ftp handler
+
+commit ea4f0f43e847de552bc4dfa2b1358fb744421dfd
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Aug 24 18:17:12 2017 +0000
+
+    append file handle after being defined
+    
+    https://github.jpl.nasa.gov/hysds-org/osaka/issues/1
+
+commit 2fa7c10cf1d1c474e957e901d00c2fa8cb6e9ec8
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Aug 17 16:38:10 2017 +0000
+
+    mstarch: fixing no-clobber flag in put, and syntax error
+
+commit 6303415e65a354b33dbd4c6519d188185281a2b8
+Merge: b3fb406 1b68906
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Aug 17 16:32:08 2017 +0000
+
+    Merge branch 'grfn' of https://github.jpl.nasa.gov/hysds-org/osaka-object-store-abstraction
+
+commit b3fb406001a28675d85524187328c76c145a9e22
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Aug 17 16:31:56 2017 +0000
+
+    mstarch: more robust file removal
+
+commit 1b689060954050f91c84f6247f5392bc5ea19fd6
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Aug 17 16:31:31 2017 +0000
+
+    mstarch: fixing osaka-s3 temp file removal
+
+commit 82f8183e12aad82f9c509501aa4f57f5b8a72d60
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Aug 11 23:23:30 2017 +0000
+
+    mstarch: basic no clobber
+
+commit 3a8aad9223d7329a6a885ffcabe0fb2332157619
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Aug 2 16:24:52 2017 +0000
+
+    mstarch: fixing S3 unit tests
+
+commit 5e9e728c33146d13418a73fbb1ea81ec76cc5a8b
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Tue Aug 1 19:58:07 2017 +0000
+
+    mstarch: fixing unit test test-file copy
+
+commit 185bd0180ab6b11156f5262e106475cf6235561a
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Tue Aug 1 19:49:20 2017 +0000
+
+    mstarch: fixing bug in s3 cache
+
+commit c4cbcd3b25194183cccd93238232683404ffebd4
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Sat Jul 29 00:21:03 2017 +0000
+
+    mstarch: adding in gs size
+
+commit dc3374a951eebd2408855e239efc63e57f2d45f4
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Sat Jul 29 00:16:21 2017 +0000
+
+    mstarch: fixing tests and adding in size
+
+commit 90a4f615275c1a38dea870e6a8dc8ea6a9a0f17d
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Jul 28 22:43:52 2017 +0000
+
+    mstarch: fixed test assert
+
+commit 84048cb6af5d066ce8a22f37cd4f14286727f3bb
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Jul 28 22:43:25 2017 +0000
+
+    mstarch: better test name directory
+
+commit 295a9a6056b5a14b32b570dd82caa979d8db1d79
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Jul 28 22:42:58 2017 +0000
+
+    mstarch: tests with better names
+
+commit cf7ca28e5d415f4c1c3a2fea35b42e003f67237b
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Jul 28 21:47:00 2017 +0000
+
+    mstarch: adding in cooperation and test
+
+commit 43fef66a7fe9b435cb334a3f12be262ca0e422ba
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Jul 24 22:57:43 2017 +0000
+
+    mstarch: fixing wacky urls for https://github.jpl.nasa.gov/hysds-org/general/issues/410
+
+commit 51dee49aac8e2da4857d09dfbf1467668ccf5186
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Jul 24 22:57:03 2017 +0000
+
+    mstarch: updated unit tests to be configurable
+
+commit 6ca93517c67f2579c91245c6b5ee2780ab7fb178
+Merge: 8602125 7d986a6
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Jul 14 11:51:00 2017 -0700
+
+    Merge branch 'master' into oco2-fixes
+
+commit 7d986a65fd43cb5318cdb278fd9c13c8f6efc631
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Jul 14 00:25:26 2017 +0000
+
+    mstarch: fixing port masking for 443 as another standard port
+
+commit f6bffe05fa9bc82d370abdf81609213a7cbb7c29
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Fri Jul 14 00:20:23 2017 +0000
+
+    mstarch: filtering our port 80
+
+commit 86021256d34cbf64c2a947652b1805d793e9cde1
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Jun 7 09:25:05 2017 -0700
+
+    mstarch: fixing s3 download slowness and disconnects
+
+commit 595414327dacad4579707224329806a83a0a4175
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Mar 6 17:09:58 2017 +0000
+
+    mstarch: fixing timeout issue
+
+commit 0015823774b9a2663d7e1b9d21848258e5199b21
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Feb 6 19:17:23 2017 +0000
+
+    mstarch: osaka supports S3 encryption on a key-level
+
+commit dac755b7b698bc23db86d3cd1e8a72bda0f6c807
+Merge: 7052d3f d8f7197
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Feb 6 18:53:14 2017 +0000
+
+    Merge branch 'master' of https://github.jpl.nasa.gov/hysds-org/osaka-object-store-abstraction
+
+commit d8f7197e618eb8c23c9582404880faf79ac82ea3
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Jan 30 22:18:46 2017 +0000
+
+    use explicitly passed profile_name for AWS creds
+
+commit 7052d3fec897a5eb65fb06222e241e008957d1fc
+Merge: a952b77 861dbab
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Jan 12 21:08:22 2017 +0000
+
+    mstarch: merging GS and CLI support
+
+commit a952b77f60690c5c1eb50da100b506ce45b063be
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Jan 12 21:04:41 2017 +0000
+
+    mstarch: removing faux support for HTTP rm
+
+commit be512b1354f89c179e9aea39552f18ef54a6e45c
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Jan 12 01:03:56 2017 +0000
+
+    mstarch: constraining file:// uris
+
+commit 861dbab7382e5fc84f63d84d43ab435f59e1a92b
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Dec 27 22:40:02 2016 +0000
+
+    set correct protobuf version
+
+commit d3f3d1a8dfd38d4efad9424cf0775c9f9fa915fd
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Dec 27 21:52:53 2016 +0000
+
+    add support for google storage
+
+commit 440173bd1ba9cb54befb45153dc0056ecb8e03a9
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Dec 15 21:35:48 2016 +0000
+
+    mstarch: adding CLI, prevented logging-by-force, and added force parameter to get,transfer
+
+commit c5a45639c5a8fe2ace32f2e450f3a3a05ad311f7
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Dec 8 10:30:41 2016 -0800
+
+    mstarch: fixing S3 to use AWS profiles named after buckets
+
+commit 44374675cc07b119da085fe88a2a582350c5ece6
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Oct 31 23:16:13 2016 +0000
+
+    mstarch: untested retries functionality
+
+commit eb8b68365567dcd95c2ee3f8bb427d7bb350e37a
+Author: M Starch <lestarch@googlemail.com>
+Date:   Mon Oct 31 13:23:19 2016 -0700
+
+    mstarch: adding retries to Osaka as well as lock exposure
+
+commit 32c95812a5323eda37a253b28073b5f710442c1a
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Oct 31 16:24:10 2016 +0000
+
+    mstarch: adding timeout unit tests
+
+commit 687b90e5b561821eb0ddf9c0d122ff26ef603404
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Oct 31 15:36:51 2016 +0000
+
+    mstarch: adding back in unit test stuff
+
+commit b437c5a89c0b5b4924f408e02a700e32f0f040df
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu Oct 27 01:29:20 2016 +0000
+
+    mstarch: working osaka webdav
+
+commit 349132b66b491b6373419f0b81f4ea8b7e7f9658
+Merge: 4df449a 51e2f57
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Oct 26 20:30:36 2016 +0000
+
+    Merge branch 'mstarch-dev-timeouts' of https://github.jpl.nasa.gov/hysds-org/osaka-object-store-abstraction into mstarch-dev-timeouts
+
+commit 4df449acc6d9fee9b84f744870ff3477581f578e
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Oct 26 20:07:26 2016 +0000
+
+    mstarch: Oskak improvments
+
+commit 51e2f5797835c702dbe43d47c750b233b1796761
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Tue Sep 13 18:08:25 2016 +0000
+
+    mstarch: fixing 2 minor osaka bugs
+
+commit 497f49709af9cb2a26fd130bb854f243856e945b
+Author: M Starch <lestarch@googlemail.com>
+Date:   Mon Sep 12 10:23:14 2016 -0700
+
+    mstarch: better tests
+
+commit 54330189be615df57a6e46aafd3662450a22e975
+Author: M Starch <lestarch@googlemail.com>
+Date:   Tue Aug 30 09:28:57 2016 -0700
+
+    mstarch: splitting HTTP and WebDAV, fixing error 301
+
+commit b7b0ec51c9158cb9f096c97940b9fed739614e87
+Author: Michael Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Aug 17 21:05:28 2016 +0000
+
+    mstarch: fixing timeout 'self' issue
+
+commit 302745769b2ba9d0d97735b38a441226d02cc97c
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Jun 20 18:09:49 2016 +0000
+
+    mstarch: renamed parameter to watchdog
+
+commit e235a7126e509caf8aa1e9772b4e337f688eb7e3
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Mon Jun 20 17:58:07 2016 +0000
+
+    mstarch: adding timeouts to requests calls
+
+commit d865e3172193bd051659f1daa1e285fc1f4e3261
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Jun 15 17:47:47 2016 +0000
+
+    mstarch: adding cleaner error message
+
+commit 9c197b15488ce8e906c84b965845416814f66deb
+Author: M Starch <lestarch@googlemail.com>
+Date:   Mon May 9 15:11:37 2016 -0700
+
+    mstarch: fixing authentication on http
+
+commit d2abb52fe98ec5a0e9220fef730af9abe40f9e3e
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu May 5 21:02:26 2016 +0000
+
+    mstarch: more logging, fixed ASF existence check
+
+commit b8769443e835877d16994143a4189e0e8a2bf675
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu May 5 19:55:27 2016 +0000
+
+    mstarch: tested Osaka (minus OAuth)
+
+commit 899a578ffdf1824df072fbfde5c825809c8d7c90
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Thu May 5 17:15:18 2016 +0000
+
+    mstarch: fixing minor http/dav issues with nonstandard http/dav services
+
+commit 0d31f50b9785c7ab21d2fe743dffafa2c68d80cc
+Author: M Starch <lestarch@googlemail.com>
+Date:   Wed May 4 19:50:04 2016 -0700
+
+    mstarch: rewrite of osaka codebase including point-to-point, file interlocks
+
+commit 02e5aa76cff81ec392e762c2bb4d35d20919db67
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 29 20:05:08 2016 +0000
+
+    recursive-http bug fix - check if directory needs to be made
+
+commit 2ca56fc1187080cc802ded410f482d2a5bcc215d
+Merge: 73e6ab1 e10e592
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 29 16:42:53 2016 +0000
+
+    Merge branch 'mstarch-sftp' into dev
+
+commit 73e6ab1e8a4f6c3342098b3231683fad7c96c06e
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 29 16:23:23 2016 +0000
+
+    create region-endpoint dict once
+
+commit 0c85872acff2c75d6ac8523c1934b459984d515d
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 29 15:57:51 2016 +0000
+
+    create s3 session for region automatically; fix bug in downloading of single s3 file and entire directory
+
+commit de5695c3b5497d9df40925b87ffe6ade921e8512
+Merge: 3c01df0 634c779
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 29 14:55:15 2016 +0000
+
+    Merge branch 'recursive-http' into dev
+
+commit 3c01df0fffb0de75c8ea3527cd710ffa2aecd296
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Mar 28 20:46:51 2016 +0000
+
+    detect endpoint url using botocore
+
+commit e10e592604571d0c832875be9612db2ae68cbf51
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Mar 25 01:19:22 2016 +0000
+
+    mstarch: properly handles single files
+
+commit c94d9c4d4d239a752da033874f064763cb6290ad
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Mar 24 23:58:59 2016 +0000
+
+    mstarch: osaka now supports SFTP put
+
+commit a2fa1de8cefd9c1e1873830145fa26b90e1424d9
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 24 15:40:36 2016 -0700
+
+    mstarch: osaka SFTP solution
+
+commit e3fd161d05bb7adfafa39823514e20c88d6e1cfa
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Mar 15 15:55:22 2016 +0000
+
+    overhaul s3 handler to use boto3; remove gof3r since boto3 supports multipart uploads/downloads
+    
+    Boto3 fixes an issue with multipart upload/download in boto.
+
+commit 634c779256e7a27179682602989693e9e21656de
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 17:12:12 2016 -0800
+
+    mstarch: fixing put folder problem
+
+commit 35bbd55492d61bd7148ee8ffbfedf808ee7335eb
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 17:00:53 2016 -0800
+
+    mstarch: fixing several edge cases
+
+commit 4263a133f4446454370d9f6fc2cf6c4019bfc759
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:46:31 2016 -0800
+
+    mstarch: adding more children abstractions
+
+commit 546bb259f4a693dcbb804421b4c04fefe358e7e9
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:44:56 2016 -0800
+
+    mstarch: adding more children abstractions
+
+commit 6d5bff4656e2e8a7a7d98d6c155cc9b998895113
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:35:59 2016 -0800
+
+    mstarch: fixing auth
+
+commit 8db61fdf9570aef15de1ccdcb34b3bfc529f700c
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:25:24 2016 -0800
+
+    mstarch: properly handles empty uploads
+
+commit 8d8e61e9310418b9ca393af9b99317d1f31543d2
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:20:56 2016 -0800
+
+    mstarch: adding in recursive upload
+
+commit 3adaf8e806f43b3bd99790541c5dc04c6f05ccec
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:14:22 2016 -0800
+
+    mstarch: adding in recursive upload
+
+commit bbb5fad77e89396cf1d5f1ece965083c026371f7
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:02:56 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 52d634325f33a04bb8b1d183916827aeb08b0659
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 16:01:06 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 4df40fc66702ac964fe8b73cf6a9d3bddeb00056
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 15:58:16 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit fb87466cb53d21efb928d23e8df08fd577712e11
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 15:23:11 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit dc63fd98201bade722da4db0918b66badaf62dad
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 15:14:48 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit aff1167ddcb4a095c5dbf9bf47f06eda7779d785
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 15:11:45 2016 -0800
+
+    mstarch: fixed empty file, folder exists, and append name problem
+
+commit 2c651d421f389002bf1f72048e5b622f65dd4e8d
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:55:34 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 2085452853c998d6b63877af92a4e89c49460f57
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:48:04 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit b436ddc8f1d879af655bb758703a56591b904ff5
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:45:01 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 429d0bd11380909e0d90af987d4f411b483685f5
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:38:15 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 6c6d00d1c511fef2f27a8cabae06bf8e3788411d
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:29:22 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit b1174f937da1b57137af784a684f5fc848813f3e
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:28:11 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 984a09fd3804ba3f907517fc782832880ffc0b12
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:26:59 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit 4b11accaafa0f239578bc5be065c254a52450eb8
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:24:57 2016 -0800
+
+    mstarch: now attempts to parse http response
+
+commit f13f7d9f7659432ea7494dff51e7a94d3b416896
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 14:02:29 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit e57fd309309d886ae2954100000c6f8acddc5768
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 13:57:34 2016 -0800
+
+    mstarch: minor bug fixes
+
+commit e35305f0235196030ae459a1f631f6dcb6b0e47b
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 13:55:18 2016 -0800
+
+    mstarch: changed to using classmethods
+
+commit aba38158f9440b7e07d078752f46da39a453977d
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 13:47:59 2016 -0800
+
+    mstarch: partially working recursive http GETs
+
+commit 880405d87165e832469a3d387d23fa6383e26f93
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Mar 10 10:26:49 2016 -0800
+
+    mstarch: rolling back osaka changes
+
+commit c06f7f82fed357d15f96994326514e357dcd6b27
+Author: M Starch <Michael.D.Starch@jpl.nasa.gov>
+Date:   Wed Mar 9 22:19:20 2016 +0000
+
+    mstarch: recursive webdav pulls
+
+commit 7c9fec72ffbef3e5278c26970b2ea9a12ee00e42
+Merge: b4354a9 1f078e8
+Author: M Starch <lestarch@googlemail.com>
+Date:   Mon Dec 7 10:01:37 2015 -0800
+
+    Merge branch 'master' of github.jpl.nasa.gov:hysds-org/osaka-object-store-abstraction
+
+commit b4354a99970f4a34247073b31863ab400cf2792a
+Author: M Starch <lestarch@googlemail.com>
+Date:   Mon Dec 7 10:01:28 2015 -0800
+
+    mstarch: fixing log message
+
+commit 1f078e86bc19b7a310bfa39b82d136f583ff8971
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Dec 5 02:39:47 2015 +0000
+
+    fix bug introduced by commit 14690639
+    
+    A path in the current working directory without "./" causes an exception.
+
+commit 46c56907bda05c76f90b716988604a3b7b9e6fbd
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Dec 5 02:01:02 2015 +0000
+
+    add support for digest authentication
+
+commit 3d6c320c55195a5f512814db792ea44ac32f7fd5
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Dec 3 16:05:38 2015 +0000
+
+    generalize osaka metrics
+
+commit e18a59a7f5917f4003b46ddbf6755a5bcd4a9caa
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Nov 19 11:52:31 2015 -0800
+
+    mstarch: Oskaka now records metrics if requested
+
+commit a6c8a2fea03de8826268287c70df175f1142dfa8
+Author: M Starch <lestarch@googlemail.com>
+Date:   Wed Nov 18 19:24:59 2015 -0800
+
+    mstarch: updating variable names and adding tests
+
+commit 14690639051a5a5d37a0880db2195a1b319e203d
+Author: M Starch <lestarch@googlemail.com>
+Date:   Wed Nov 18 19:21:14 2015 -0800
+
+    mstarch: osaka now creats downalod dir for http
+
+commit f46b4640e8f6773ce65b9094e5c6291129e461bf
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Oct 26 20:16:57 2015 +0000
+
+    remove normalization; fixed in hysds.product_ingest
+
+commit 2eb0705a1d67aa44dadaba8121940d99bcdc7627
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Oct 26 16:10:31 2015 +0000
+
+    normalize urls otherwise some backends will generate unexpected results
+
+commit fc70c4d35a648addb4520eaef2eefb45389e2c9d
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Mon Oct 26 15:08:33 2015 +0000
+
+    fix bug in handling US Standard
+
+commit 470e7fc2959428555ded5af407e7198d6fc549a1
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Sat Oct 24 18:04:49 2015 +0000
+
+    fix bug in oauth authentication
+
+commit ad4adb3c88e991cf2fbdb82debf81bd695edb547
+Author: gmanipon <gmanipon@jpl.nasa.gov>
+Date:   Wed Oct 14 17:24:15 2015 +0000
+
+    add .gitignore
+
+commit 69149aa5c9238c5971404a273bb29308cd5ef240
+Author: M Starch <lestarch@googlemail.com>
+Date:   Tue Oct 13 13:46:28 2015 -0700
+
+    mstarch: working azure
+
+commit 6c515a31abee91e3b7363754fcdff6b4a3afb6b9
+Author: M Starch <lestarch@googlemail.com>
+Date:   Tue Oct 13 12:44:42 2015 -0700
+
+    mstarch: fixes region override
+
+commit 8f7a0ad6452e23df02377f83855a103ff1d5aefd
+Author: M Starch <lestarch@googlemail.com>
+Date:   Tue Oct 13 12:37:59 2015 -0700
+
+    mstarch: fixed s3 region specification and tenative azure support
+
+commit f1a47b3939f4261e78e492ee1e2b3b3f3212fe32
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Oct 9 00:03:53 2015 +0000
+
+    mstarch: tested s3, file, and http
+
+commit 60cb82041f6acc63cacdd15628646a1303d240ce
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Thu Oct 8 15:52:48 2015 +0000
+
+    mstarch: fixes to http
+
+commit d53ac6f05c847af47cca75a658dc00745c19ea3c
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 23:34:15 2015 +0000
+
+    mstarch: fixing import
+
+commit b1a991138a2bf30c3dfb4865e4acf1f2268aa9f9
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 22:53:45 2015 +0000
+
+    mstarch: 'supported' functionality
+
+commit 0151b059eb61163bfdac9b1162bfcd60b0944ee0
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 22:24:52 2015 +0000
+
+    mstarch: adding requests import
+
+commit 12c8b8c9966e71cd57d11e7ef75c185f59727979
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 22:12:16 2015 +0000
+
+    mstarch: proper close if oauth is none
+
+commit 1ec6ce0d9dde6704ffc0276e5fa4aebe7f86ba9a
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 22:00:40 2015 +0000
+
+    mstarch: fixing http osaka module
+
+commit 91b13ec99a2d7915c9da67997d32be36ef5ce957
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 21:38:41 2015 +0000
+
+    mstarch: now using class methods to prevent the need for may objects (and debug messages)
+
+commit 1de365551b89b098d82cbe273e5666e46f944217
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 20:58:29 2015 +0000
+
+    mstarch: properly passing parameters
+
+commit 462d2735d442f5f07a93d69afd0af3859231d5f1
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 20:34:16 2015 +0000
+
+    mstarch: more osaka changes
+
+commit 418acd56cfa389766c75b8e3a45478db35034073
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 20:14:12 2015 +0000
+
+    mstarch: updates to disabled azure
+
+commit daa03c759c73bd18972e380dfc44ac5fc1ccdeef
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Tue Oct 6 20:13:23 2015 +0000
+
+    mstarch: updating osaka with tests, azure disabled
+
+commit 977d3f453b3786b9accdf2eaf300934fa4f72aa7
+Author: Gerald Manipon <gmanipon@jpl.nasa.gov>
+Date:   Fri Sep 18 00:27:06 2015 +0000
+
+    mstarch: properly passing params
+
+commit 28b16dccaf664738b513bf6f3e3ef4760f642a11
+Author: M Starch <lestarch@googlemail.com>
+Date:   Thu Sep 17 09:39:05 2015 -0700
+
+    mstarch: initial implementation of the Osaka Object Store Framework

@@ -1,0 +1,41 @@
+{
+  "center": {
+    "type": "point", 
+    "coordinates": [
+      0, 
+      0
+    ]
+  }, 
+  "prod_file": "dumby-product-20160830161546/dumby-product-20160830161546.dat", 
+  "sleep": 5, 
+  "location": {
+    "type": "polygon", 
+    "coordinates": [
+      [
+        [
+          -179.9, 
+          -89.9
+        ], 
+        [
+          -179.9, 
+          89.9
+        ], 
+        [
+          179.9, 
+          89.9
+        ], 
+        [
+          179.9, 
+          -89.9
+        ], 
+        [
+          -179.9, 
+          -89.9
+        ]
+      ]
+    ]
+  }, 
+  "starttime": "2016-08-30T16:15:47.091583", 
+  "prod_dir": "dumby-product-20160830161546", 
+  "endtime": "2016-08-30T16:15:47.091659"
+}

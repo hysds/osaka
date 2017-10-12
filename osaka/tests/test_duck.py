@@ -1,0 +1,48 @@
+import unittest
+import inspect
+import osaka.base
+
+class DuckTest(unittest.TestCase):
+    '''
+    This class runs against all Osaka storage backends, making sure that they
+    meet all the necessary requirements to be Osaka storage backends.
+    '''
+    def test_ModuleDuckTypeing(self):
+        '''
+        Tests the duck-typing of the Osaka storage modules
+        '''
+        definitions = {
+               "__init__":   ["self"],
+               "getSchemes": [],
+               "connect":    ["self","uri","params"],
+               "get":        ["self","uri"],
+               "put":        ["self","stream","uri"],
+               "listAllChildren":["self","uri"],
+               "exists":     ["self","uri"],
+               "list":       ["self","uri"],
+               "isComposite":["self","uri"],
+               "close":      ["self"],
+               "rm":         ["self","uri"],
+               "size":       ["self","uri"]
+              }
+        # Loop through the classes found by loading the backends and 
+        # ensure they are up-to-spec
+        for scheme,clazz in osaka.base.StorageBase.loadBackends().iteritems():
+            # Loop through all definitions making sure they exist in the specification
+            for func,values in definitions.iteritems():
+                try:
+                    attr = getattr(clazz,func)
+                except AttributeError:
+                    self.assertTrue(False,"{0} does not have function: {1}".format(clazz.__name__,func))
+                args, varargs, keywords, defaults = inspect.getargspec(attr)
+                # Remove defaulted arguments if possible
+                if not args is None and not defaults is None:
+                    count = len(args)-len(defaults)
+                    tmp = args[:count]
+                    # Add back in any defined, but defaulted values
+                    for arg in args[count:]:
+                        if arg in values:
+                            tmp.append(arg)
+                    args = tmp
+                # Go through list of required arguments
+                self.assertEquals(args, values, "{0}.{1} has invalid arguments: {2} vs {3}".format(clazz.__name__,attr.__name__,values,args))
