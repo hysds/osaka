@@ -50,13 +50,15 @@ class Cooperator(object):
         '''
         ex_source = self.dlock.getLockMetadata("source")
         error = self.dlock.getLockMetadata("error")
+        ouri = self.dlock.ouri
         if ex_source is None:
-            raise CooperationNotPossibleException("No source specified. Cooperation not possible")
+            raise CooperationNotPossibleException("No source specified. Cooperation not possible for {0}"
+                                 .format(ouri))
         elif self.source != ex_source:
-            raise CooperationNotPossibleException("{0} differs incoming source {1}. Cooperation not possible"
-                                 .format(self.source, ex_source))
+            raise CooperationNotPossibleException("{0} differs incoming source {1}. Cooperation not possible for {2}"
+                                 .format(self.source, ex_source, ouri))
         elif not error is None:
-            raise OsakaException("Cooperation error: "+error)
+            raise OsakaException("Cooperation error for {0}: {1}".format(ouri, error))
     def isPrimary(self):
         '''
         Is this the primary responsible for download
