@@ -150,6 +150,9 @@ class GS(osaka.base.StorageBase):
         return True
 
 
+    def isObjectStore(self): return True
+
+
     def close(self):
         '''
         Close this backend

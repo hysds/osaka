@@ -150,6 +150,7 @@ class HTTP(osaka.base.StorageBase):
             return True
         osaka.utils.LOGGER.debug("Is URI {0} composite? {1}".format(uri,False))
         return False
+    def isObjectStore(self): return False
     def close(self):
         '''
         Close this backend
