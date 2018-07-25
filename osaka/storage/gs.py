@@ -1,6 +1,6 @@
 import re
 from google.cloud import storage
-from google.cloud.exceptions import Conflict, Forbidden
+from google.cloud.exceptions import Conflict, Forbidden, NotFound
 import urlparse
 import datetime
 import os.path
@@ -185,6 +185,6 @@ class GS(osaka.base.StorageBase):
         @param bucket - name of bucket to find
         '''
         try:
-            return self.gs.create_bucket(bucket)
-        except (Conflict, Forbidden), e:
             return self.gs.get_bucket(bucket)
+        except NotFound, e:
+            return self.gs.create_bucket(bucket)
