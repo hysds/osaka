@@ -90,7 +90,8 @@ class GS(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
         container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
         bucket = self.bucket(container)
-        blob = bucket.blob(key)
+        CHUNK_SIZE = 2560000 # kBytes
+        blob = bucket.blob(key, chunk_size=CHUNK_SIZE)
         with osaka.storage.file.FileHandlerConversion(stream) as fn:
             blob.upload_from_filename(fn)
         return blob.size
