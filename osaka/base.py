@@ -43,6 +43,7 @@ class StorageBase(object):
         import osaka.storage.http
         import osaka.storage.webdav
         import osaka.storage.s3
+        import osaka.storage.az
         import osaka.storage.gs
         import osaka.storage.ftp
         for cls in clazz.__subclasses__():
