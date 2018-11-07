@@ -11,7 +11,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'requests>=2.7.0', 'easywebdav==1.2.0', 'fabric==1.10.1',
-        'filechunkio==1.6.0','azure-storage>=0.20.0', 'boto3>=1.2.6',
+        'filechunkio==1.6.0','azure-storage>=0.36.0', 'boto3>=1.2.6',
         'google-cloud-storage>=0.22.0', 'six>=1.10.0'
     ],
     entry_points={
