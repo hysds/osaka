@@ -1,6 +1,6 @@
 import re
 from google.cloud import storage
-from google.cloud.exceptions import Conflict, Forbidden
+from google.cloud.exceptions import Conflict, Forbidden, NotFound
 import urlparse
 import datetime
 import os.path
@@ -90,7 +90,8 @@ class GS(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
         container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
         bucket = self.bucket(container)
-        blob = bucket.blob(key)
+        CHUNK_SIZE = 2147221504 # Bytes
+	blob = bucket.blob(key, chunk_size=CHUNK_SIZE)
         with osaka.storage.file.FileHandlerConversion(stream) as fn:
             blob.upload_from_filename(fn)
         return blob.size
@@ -150,6 +151,9 @@ class GS(osaka.base.StorageBase):
         return True
 
 
+    def isObjectStore(self): return True
+
+
     def close(self):
         '''
         Close this backend
@@ -185,6 +189,6 @@ class GS(osaka.base.StorageBase):
         @param bucket - name of bucket to find
         '''
         try:
-            return self.gs.create_bucket(bucket)
-        except (Conflict, Forbidden), e:
             return self.gs.get_bucket(bucket)
+        except NotFound, e:
+            return self.gs.create_bucket(bucket)

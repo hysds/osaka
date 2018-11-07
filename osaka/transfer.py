@@ -127,7 +127,8 @@ class Transferer(object):
                     ''' Remove one item '''
                     osaka.utils.LOGGER.debug("Removing specific item {0}".format(item))
                     handle.rm(item)
-                osaka.utils.product_composite_iterator(uri, handle, remove_one, True)
+                osaka.utils.product_composite_iterator(uri, handle, remove_one, 
+                                                       False if handle.isObjectStore() else True)
                 break
             except Exception as e:
                 osaka.utils.LOGGER.warning("Exception occurred, retrying({0}): {1}".format(retry+1,e))
