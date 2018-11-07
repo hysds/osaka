@@ -103,6 +103,7 @@ class File(osaka.base.StorageBase):
         isDir = os.path.isdir(urlparse.urlparse(uri).path)
         osaka.utils.LOGGER.debug("Is URI {0} a directory: {1} {2}".format(uri,isDir,self.exists(uri)))
         return isDir
+    def isObjectStore(self): return False
     def close(self):
         '''
         Close this backend

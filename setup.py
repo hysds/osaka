@@ -13,7 +13,7 @@ setup(
         'requests>=2.7.0', 'easywebdav==1.2.0', 'fabric==1.10.1',
         'filechunkio==1.6.0','azure-storage==0.20.0', 'boto3>=1.2.6',
         'protobuf==3.1.0.post1', 'google-cloud-storage>=0.22.0',
-        'six>=1.10.0', 'google-cloud-monitoring<0.29dev,>=0.28.0'
+        'six>=1.10.0'
     ],
     entry_points={
           'console_scripts': [
