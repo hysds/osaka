@@ -132,6 +132,7 @@ class DAV(osaka.base.StorageBase):
         @param uri: uri to list
         '''
         return self.httpHandler.isComposite(re.compile("^dav").sub("http",uri))
+    def isObjectStore(self): return False
     def close(self):
         '''
         Close this backend

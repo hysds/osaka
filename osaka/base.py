@@ -88,6 +88,12 @@ class StorageBase(object):
         @param uri: uri to list
         '''
         raise osaka.utils.OsakaException("{0} does not implement 'isComposite' call".format(type(self).__name__))
+    def isObjectStore(self):
+        '''
+        Return True if backend is an object store where no directories exist. Only keys.
+        @param uri: uri to list
+        '''
+        raise osaka.utils.OsakaException("{0} does not implement 'isObjectStore' call".format(type(self).__name__))
     def close(self):
         '''
         Close this backend
