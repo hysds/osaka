@@ -146,6 +146,7 @@ class Azure(osaka.base.StorageBase):
         if len(children) == 0 or (len(children) == 1 and children[0] == uri):
             return False
         return True
+    def isObjectStore(self): return True
     def close(self):
         '''
         Close this backend
