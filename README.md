@@ -9,7 +9,7 @@ Osaka is an object storage abstraction system allowing the user to push generic 
 | s3://,s3s://  | Yes | Yes | Yes | |
 | dav://,davs://  | Yes | Yes | Yes | |
 | http://,https://| Yes | Yes | Yes | |
-| azure://,azures:// | No | No | No | Needs reimplmenetation, no dev azure instance exists |
+| azure://,azures:// | Yes | Yes | Yes | Experimental version by NVG, relying on an older version of the `azure-storage-python` library |
 | ftp://,sftp://  | No | No | No | Needs reimplmentation |
 | rsync:// | No | No |No | Not a backend, but a transfer mechanism |
 
