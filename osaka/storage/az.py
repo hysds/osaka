@@ -8,6 +8,7 @@ import osaka.base
 import osaka.utils 
 import osaka.storage.file
 
+from configparser import SafeConfigParser
 from azure.storage.blob import BlockBlobService
 
 '''
@@ -49,6 +50,19 @@ class Azure(osaka.base.StorageBase):
             session_kwargs["account_key"] = parsed.password
         elif "account_key" in params:
             session_kwargs["account_key"] = params["account_key"]
+
+        # if neither account_name or account_key is populated, fallback to
+        # directly parsing configuration file in ~/.azure
+        if not "account_name" in session_kwargs or not "account_key" in session_kwargs:
+            # check if ~/.azure/config exists
+            azure_config_path = os.environ['HOME'] + "/.azure/config"
+            if os.path.isfile(azure_config_path):
+                azure_config = SafeConfigParser()
+                azure_config.read(azure_config_path)
+                session_kwargs["account_name"] = azure_config.get("storage", "account")
+                session_kwargs["account_key"] = azure_config.get("storage", "key")
+            else:
+                raise osaka.utils.OsakaException("No Azure Blob Storage credentials found at " + azure_config_path)
 
         self.service = BlockBlobService(**session_kwargs)
 
