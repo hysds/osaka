@@ -12,12 +12,12 @@ from azure.storage.blob import BlockBlobService
 
 '''
 Azure storage connection services
-@author starchmd
+@author starchmd,zanechua,andiariffin,d3lta-v
 '''
 class Azure(osaka.base.StorageBase):
     '''
-    A class used to connect to the Azure storage and
-    upload/download files using blob storage
+    A class used to connect to the Azure storage and upload/download
+    files using blob storage
     '''
     def __init__(self):
         '''
@@ -28,32 +28,27 @@ class Azure(osaka.base.StorageBase):
         self.service = None
     def connect(self,uri,params={}):
         '''
-        Connect to the Azure service with given user and key
-        @param user - username to use to connect to
-        @param key - key to use to connect
+        Connects to the backend
+        @param uri - azures or azure uri for resource
+        @param params - optional, may contain: account_name, account_key
         '''
         osaka.utils.LOGGER.debug("Opening Azure handler")
         self.cache = {}
         uri = re.compile("^azure").sub("http",uri)
         parsed = urlparse.urlparse(uri)
         session_kwargs = {}
-        kwargs = {}
-        check_host = parsed.hostname if not "location" in params else params["location"]
-        if not parsed.hostname is None:
-            kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
-        else:
-            kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, kwargs["endpoint_url"])
-        if not parsed.port is None and parsed.port != 80 and parsed.port != 443:
-            kwargs["endpoint_url"] = "%s:%s" % (kwargs["endpoint_url"], parsed.port)
+
+        # attempt to get account_name (as username) from url or parameters array
         if not parsed.username is None:
             session_kwargs["account_name"] = parsed.username
         elif "account_name" in params:
             session_kwargs["account_name"] = params["account_name"]
+
+        # attempt to get account_key (as password) from url or parameters array
         if not parsed.password is None:
             session_kwargs["account_key"] = parsed.password
         elif "account_key" in params:
             session_kwargs["account_key"] = params["account_key"]
-        kwargs["use_ssl"] = parsed.scheme == "https"
 
         self.service = BlockBlobService(**session_kwargs)
 
@@ -70,7 +65,7 @@ class Azure(osaka.base.StorageBase):
         return ["azure","azures"]
     def get(self, uri):
         '''
-        Gets the URI (azure or azures) as a steam
+        Gets the URI (azure or azures) as a stream
         @param uri: uri to get
         '''
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
@@ -85,7 +80,7 @@ class Azure(osaka.base.StorageBase):
         return fh
     def put(self, stream, uri):
         '''
-        Puts a stream to a URI as a steam
+        Puts a stream to a URI as a stream
         @param stream: stream to upload
         @param uri: uri to put
         '''
@@ -170,7 +165,7 @@ class Azure(osaka.base.StorageBase):
         if uri in self.cache:
             return self.cache[uri].size
         container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
-        properties = self.service.get_blob_properties(cont, blob)
+        properties = self.service.get_blob_properties(container, key).properties
         return properties.content_length
     def rm(self,uri):
         '''
