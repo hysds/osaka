@@ -6,11 +6,14 @@ parsed from the url:
 
 @author starchmd
 '''
+
+
 class Example(object):
     '''
     Example Osaka handler
     '''
-    def __init__(self,params={}):
+
+    def __init__(self, params={}):
         '''
         Constructor:
             1. All parameters are in the params map
@@ -18,7 +21,8 @@ class Example(object):
                and called long before "connect"
         '''
         print("Init the example handler")
-    def connect(self,host,port,user,password,secure):
+
+    def connect(self, host, port, user, password, secure):
         '''
         Connect to this storage medium.  All data is parsed out of the url and may be None
             scheme:
@@ -31,7 +35,9 @@ class Example(object):
         @param password - may be None, password to connect with
                       implementor must handle a None password
         '''
-        print("Connecting to example handler:",host,port,user,password,secure)
+        print("Connecting to example handler:",
+              host, port, user, password, secure)
+
     @classmethod
     def getSchemes(clazz):
         '''
@@ -39,31 +45,35 @@ class Example(object):
         Note: handling the scheme of another handler produces unknown results
         @returns list of handled schemes
         '''
-        return ["example","examples"]
-    def put(self,path,url):
+        return ["example", "examples"]
+
+    def put(self, path, url):
         '''
         Put the given path to the given url
         @param path - local path of file to put
         @param url - url to put file/folder to
         '''
-        print("Putting:",path,"to",url)
+        print("Putting:", path, "to", url)
         return False
-    def get(self,url,dest):
+
+    def get(self, url, dest):
         '''
         Get the url (file/folder) to local path
         @param url - url to get file/folder from
         @param path - path to place fetched files
         '''
-        print("Getting:",url,"to",dest)
+        print("Getting:", url, "to", dest)
         return False
+
     def close(self):
         '''
         Close this connection
         '''
         print("Closing backend")
-    def rm(self,url):
+
+    def rm(self, url):
         '''
         Remove this file/folder
         '''
-        print("Removing product at:",url)
+        print("Removing product at:", url)
         return False

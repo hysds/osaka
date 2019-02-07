@@ -16,8 +16,8 @@ setup(
         'configparser>=3.5.0'
     ],
     entry_points={
-          'console_scripts': [
-              'osaka = osaka.__main__:main'
-          ]
-      }
+        'console_scripts': [
+            'osaka = osaka.__main__:main'
+        ]
+    }
 )

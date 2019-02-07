@@ -2,11 +2,13 @@ import copy
 import time
 from osaka.utils import OsakaException, CooperationNotPossibleException
 
+
 class Cooperator(object):
     '''
     A cooperator object used to facilitate cooperation between two differen osaka instances
     @mstarch
     '''
+
     def __init__(self, source, dlock, lockMetadata):
         '''
         Initialize a cooperator
@@ -15,12 +17,13 @@ class Cooperator(object):
         self.dlock = dlock
         self.lockMetadata = lockMetadata
         self.primary = False
+
     def __enter__(self):
         '''
         Enter this cooperate block
         @param:
         '''
-        #Atomic lock-or-cooperate depends on each backend's atomicity of "put"
+        # Atomic lock-or-cooperate depends on each backend's atomicity of "put"
         try:
             lockMetadata = copy.copy(self.lockMetadata)
             lockMetadata["source"] = self.source
@@ -31,6 +34,7 @@ class Cooperator(object):
                 raise
             self.whenLocked()
         return self
+
     def __exit__(self, exception_type, exception_value, traceback):
         '''
         Handle exceptions in the with block
@@ -41,9 +45,11 @@ class Cooperator(object):
         if not self.primary:
             return
         elif not exception_value is None:
-            self.dlock.setLockMetadata("error", str(exception_type) + str(exception_value))
+            self.dlock.setLockMetadata("error", str(
+                exception_type) + str(exception_value))
         else:
             self.dlock.unlock()
+
     def whenLocked(self):
         '''
         What to do when a file is already locked
@@ -53,22 +59,27 @@ class Cooperator(object):
         ouri = self.dlock.ouri
         if ex_source is None:
             raise CooperationNotPossibleException("No source specified. Cooperation not possible for {0}"
-                                 .format(ouri))
+                                                  .format(ouri))
         elif self.source != ex_source:
             raise CooperationNotPossibleException("{0} differs incoming source {1}. Cooperation not possible for {2}"
-                                 .format(self.source, ex_source, ouri))
+                                                  .format(self.source, ex_source, ouri))
         elif not error is None:
-            raise OsakaException("Cooperation error for {0}: {1}".format(ouri, error))
+            raise OsakaException(
+                "Cooperation error for {0}: {1}".format(ouri, error))
+
     def isPrimary(self):
         '''
         Is this the primary responsible for download
         '''
         return self.primary
+
+
 class Spinner(object):
     '''
     A class to spin on a download
     @author mstarch
     '''
+
     def __init__(self, dlock, timeout, interval=0.5):
         '''
         Initialize this spinner
@@ -77,11 +88,12 @@ class Spinner(object):
         self.dlock = dlock
         self.timeout = timeout
         self.interval = interval
+
     def spin(self):
         '''
         Will spin on this lock until download completes or error is detected
         '''
-        tm=0
+        tm = 0
         while True:
             error = self.dlock.getLockMetadata("error")
             if not error is None:
@@ -92,5 +104,3 @@ class Spinner(object):
                 raise OsakaException("Timed out after {0} seconds".format(tm))
             time.sleep(self.interval)
             tm = tm + self.interval
-      
-

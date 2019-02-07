@@ -11,11 +11,14 @@ Created on Oct 31, 2016
 
 @author: mstarch
 '''
+
+
 class TimeoutTest(unittest.TestCase):
     '''
     A test that setus up high and low timeouts to ensure that the timeouts
     work properly.
     '''
+
     def setUp(self):
         '''
         Setup method for the test case
@@ -23,26 +26,30 @@ class TimeoutTest(unittest.TestCase):
         self.config = osaka.tests.util.load_test_config()
         self.addCleanup(self.cleanup)
         unittest.TestCase.setUp(self)
-        self.scratch = self.config.get("scratch_file","/tmp/osaka-unittest-scratch/")
+        self.scratch = self.config.get(
+            "scratch_file", "/tmp/osaka-unittest-scratch/")
         self.worker = self.config.get("dav", {}).get("worker", None)
         # A list of input objects from various locations
-        self.ins = [ self.config.get("dav",{}).get("test_input_urls",[])[0],
-                     self.config.get("http",{}).get("test_input_urls",[])[0]
-                   ]
+        self.ins = [self.config.get("dav", {}).get("test_input_urls", [])[0],
+                    self.config.get("http", {}).get("test_input_urls", [])[0]
+                    ]
         # A list of output only locations
         self.out = []
-        #Construct path to checked-in test cases
+        # Construct path to checked-in test cases
         self.base = os.path.dirname(osaka.__file__)+"/../resources/objects/"
-        self.objects = [os.path.join(self.base,listing) for listing in os.listdir(self.base) if listing.startswith("test-")]
-        osaka.tests.util.scpWorkerObject(self,self.objects[1])
-        self.assertTrue(self.scratch.startswith("/tmp/osaka"),"Assertion Error: scratch space is un-safe")
-        #Clean up old temp directories and create new ones
+        self.objects = [os.path.join(self.base, listing) for listing in os.listdir(
+            self.base) if listing.startswith("test-")]
+        osaka.tests.util.scpWorkerObject(self, self.objects[1])
+        self.assertTrue(self.scratch.startswith("/tmp/osaka"),
+                        "Assertion Error: scratch space is un-safe")
+        # Clean up old temp directories and create new ones
         try:
             osaka.main.rmall(self.scratch, unlock=True)
         except OSError as e:
             if not str(e).startswith("[Errno 2]"):
                 raise
         os.makedirs(self.scratch)
+
     def cleanup(self):
         '''
         Cleanup existing directories
@@ -55,6 +62,7 @@ class TimeoutTest(unittest.TestCase):
             if not str(e).startswith("[Errno 2]"):
                 raise
         return True
+
     def test_timeout(self):
         '''
         Timeout and ensure that there error
@@ -62,7 +70,8 @@ class TimeoutTest(unittest.TestCase):
         for obj in self.ins:
             self.cleanup()
             with self.assertRaises(requests.exceptions.Timeout):
-                osaka.main.get(obj,self.scratch, {"timeout":0.00000001})
+                osaka.main.get(obj, self.scratch, {"timeout": 0.00000001})
+
     def test_notimeout(self):
         '''
         Timeout and ensure that there error
@@ -70,6 +79,6 @@ class TimeoutTest(unittest.TestCase):
         for obj in self.ins:
             self.cleanup()
             try:
-                osaka.main.get(obj,self.scratch, {"timeout":1000})
+                osaka.main.get(obj, self.scratch, {"timeout": 1000})
             except requests.exceptions.Timeout as te:
-                self.assertFalse(True,"Timeout recieved when not intended")
+                self.assertFalse(True, "Timeout recieved when not intended")

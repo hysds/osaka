@@ -9,6 +9,8 @@ DU_CALC = {
     "MB": 1024**2,
     "KB": 1024
 }
+
+
 def get_uri_username_and_password(uri):
     '''
     Parses the URI and returns the username and password
@@ -16,7 +18,9 @@ def get_uri_username_and_password(uri):
     @return: tuple containing the username/password from the URI 
     '''
     temp = urllib.parse.urlparse(uri)
-    return (temp.username,temp.password)
+    return (temp.username, temp.password)
+
+
 def get_uri_scheme_and_hostname(uri):
     '''
     Parses the URI and returns the scheme and hostname
@@ -25,7 +29,9 @@ def get_uri_scheme_and_hostname(uri):
     '''
     temp = urllib.parse.urlparse(uri)
     host = temp.hostname + ("" if temp.port is None else ":"+str(temp.port))
-    return (temp.scheme,host)
+    return (temp.scheme, host)
+
+
 def get_uri_path(uri):
     '''
     Gets the path from the uri
@@ -34,15 +40,17 @@ def get_uri_path(uri):
     '''
     temp = urllib.parse.urlparse(uri)
     return temp.path
+
+
 def get_container_and_path(urlpath):
     '''
     Gets the container and path from the given url
     @param urlpath - url's path to determine container and path from
     '''
-    split =  urlpath.lstrip("/").split("/",1)
-    return (split[0],"" if not len(split) > 1 else split[1])
+    split = urlpath.lstrip("/").split("/", 1)
+    return (split[0], "" if not len(split) > 1 else split[1])
 
-#def walk(func, directory,destdir, *params):
+# def walk(func, directory,destdir, *params):
 #    '''
 #    Walk the directory and call the function for each file
 #    @param func - function to call back
@@ -57,15 +65,19 @@ def get_container_and_path(urlpath):
 #            ret = ret and func(full,dest,*params)
 #    return ret
 
+
 def get_disk_usage(path):
     """Return disk size, "du -sk", for a path."""
     return int(subprocess.check_output(['du', '-sk', path]).split()[0]) * DU_CALC['KB']
+
+
 def human_size(size):
     """Return the human size"""
     for tmp in ["GB", "MB", "KB"]:
         if size > DU_CALC[tmp]:
             return (size/float(DU_CALC[tmp]), tmp)
-    return (size, "B") 
+    return (size, "B")
+
 
 def product_composite_iterator(base, handle, callback, include_top=False):
     '''
@@ -83,8 +95,22 @@ def product_composite_iterator(base, handle, callback, include_top=False):
             uris.append(base)
     return list(map(callback, uris))
 
-class OsakaException(Exception): pass
-class CooperationNotPossibleException(OsakaException): pass
-class CooperationRefusedException(OsakaException): pass
-class TimeoutException(OsakaException): pass
-class NoClobberException(OsakaException): pass
+
+class OsakaException(Exception):
+    pass
+
+
+class CooperationNotPossibleException(OsakaException):
+    pass
+
+
+class CooperationRefusedException(OsakaException):
+    pass
+
+
+class TimeoutException(OsakaException):
+    pass
+
+
+class NoClobberException(OsakaException):
+    pass
