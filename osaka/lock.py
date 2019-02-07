@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import os
 import json
 import socket
@@ -7,9 +7,9 @@ import traceback
 try:
     import urllib.urlparse as urlparse
 except ImportError as ime:
-    import urlparse as urlparse
+    import urllib.parse as urlparse
 try:
-    import StringIO as io
+    import io as io
 except:
     import io
 #Osaka imports

@@ -27,9 +27,9 @@ class DuckTest(unittest.TestCase):
               }
         # Loop through the classes found by loading the backends and 
         # ensure they are up-to-spec
-        for scheme,clazz in osaka.base.StorageBase.loadBackends().iteritems():
+        for scheme,clazz in osaka.base.StorageBase.loadBackends().items():
             # Loop through all definitions making sure they exist in the specification
-            for func,values in definitions.iteritems():
+            for func,values in definitions.items():
                 try:
                     attr = getattr(clazz,func)
                 except AttributeError:
@@ -45,4 +45,4 @@ class DuckTest(unittest.TestCase):
                             tmp.append(arg)
                     args = tmp
                 # Go through list of required arguments
-                self.assertEquals(args, values, "{0}.{1} has invalid arguments: {2} vs {3}".format(clazz.__name__,attr.__name__,values,args))
+                self.assertEqual(args, values, "{0}.{1} has invalid arguments: {2} vs {3}".format(clazz.__name__,attr.__name__,values,args))

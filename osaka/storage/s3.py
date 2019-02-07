@@ -1,6 +1,6 @@
 import re
 import boto3, botocore
-import urlparse
+import urllib.parse
 import datetime
 import os.path
 import json
@@ -25,7 +25,7 @@ def get_region_info():
         for part in s.get_available_partitions():
             for region in s.get_available_regions('s3', part):
                 s3 = s.create_client('s3', region)
-                ep = urlparse.urlparse(s3.meta.endpoint_url).netloc
+                ep = urllib.parse.urlparse(s3.meta.endpoint_url).netloc
                 S3_REGION_INFO[region] = ep
     return S3_REGION_INFO
 
@@ -47,11 +47,11 @@ class S3(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Opening S3 handler")
         self.cache = {}
         uri = re.compile("^s3").sub("http",uri)
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         session_kwargs = {}
         kwargs = {}
         check_host = parsed.hostname if not "location" in params else params["location"]
-        for region, ep in get_region_info().iteritems():
+        for region, ep in get_region_info().items():
             if re.search(ep, check_host):
                 kwargs["endpoint_url"] = ep
                 session_kwargs["region_name"] = region
@@ -98,7 +98,7 @@ class S3(osaka.base.StorageBase):
         @param uri: uri to get
         '''
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container,create=False)
         obj = bucket.Object(key)
         fname = "/tmp/osaka-s3-"+str(datetime.datetime.now())
@@ -116,7 +116,7 @@ class S3(osaka.base.StorageBase):
         @param uri: uri to put
         '''
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container)
         obj = bucket.Object(key)
         extra = {}
@@ -135,8 +135,8 @@ class S3(osaka.base.StorageBase):
         ret = []
         #Dump the cache if possible
         if "__top__" in self.cache and uri == self.cache["__top__"]:
-            return [ k for k in self.cache.keys() if k != "__top__" ]
-        parsed = urlparse.urlparse(uri)
+            return [ k for k in list(self.cache.keys()) if k != "__top__" ]
+        parsed = urllib.parse.urlparse(uri)
         container,key = osaka.utils.get_container_and_path(parsed.path)
         bucket = self.bucket(container,create=False)
         collection = bucket.objects.filter(Prefix=key)
@@ -198,7 +198,7 @@ class S3(osaka.base.StorageBase):
         '''
         if uri in self.cache:
             return self.cache[uri].size
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container,create=False)
         obj = bucket.Object(key)
         try:
@@ -212,7 +212,7 @@ class S3(osaka.base.StorageBase):
         Remove this uri from backend
         @param uri: uri to remove
         '''
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container,create=False)
         obj = bucket.Object(key)
         obj.delete()
@@ -222,7 +222,7 @@ class S3(osaka.base.StorageBase):
         Keys with prefix of given URI
         @param uri: prefix URI
         '''
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         container,key = osaka.utils.get_container_and_path(parsed.path)
         bucket = self.bucket(container,create=False)
         collection = bucket.objects.filter(Prefix=key)
@@ -236,7 +236,7 @@ class S3(osaka.base.StorageBase):
         exists = True
         try:
             self.s3.meta.client.head_bucket(Bucket=bucket)
-        except botocore.exceptions.ClientError, e:
+        except botocore.exceptions.ClientError as e:
             error_code = int(e.response['Error']['Code'])
             if error_code == 404:
                 exists = False

@@ -36,7 +36,7 @@ class TransferTest(unittest.TestCase):
         # outgoing product, and thus can be setup internal
         # to this test
         self.inouts = []
-        for section in self.config.values():
+        for section in list(self.config.values()):
             try:
                 self.ins.extend(section.get("test_input_urls",[]))
                 self.inouts.extend(section.get("test_output_urls",[]))

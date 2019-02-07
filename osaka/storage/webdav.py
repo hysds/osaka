@@ -1,7 +1,7 @@
-from __future__ import print_function
+
 import os
 import re
-import urlparse
+import urllib.parse
 import requests
 import easywebdav
 import datetime

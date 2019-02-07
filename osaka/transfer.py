@@ -161,7 +161,7 @@ class Transferer(object):
             osaka.utils.LOGGER.info("Writing metric to: {0}".format(output))
             with open(output,"w") as outputf:
                 json.dump(data, outputf)
-        except Exception, e:
+        except Exception as e:
             osaka.utils.LOGGER.warning("Error merging metrics with: {0} Error: {1}".format(output,str(e)))
             raise e
             

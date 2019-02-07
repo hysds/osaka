@@ -1,7 +1,7 @@
-from __future__ import print_function
+
 import os
 import re
-import urlparse
+import urllib.parse
 import requests
 
 from requests.auth import HTTPBasicAuth,HTTPDigestAuth
@@ -34,7 +34,7 @@ class HTTP(osaka.base.StorageBase):
         Connects to the backend
         '''
         self.timeout = 1800.0 if not "timeout" in params else params["timeout"]
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         user = None if not "user" in parsed else parsed["user"]
         password = None if not "password" in parsed else parsed["password"]
         osaka.utils.LOGGER.debug("Opening HTTP handler")
@@ -85,7 +85,7 @@ class HTTP(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Getting size of {0} exist? Timeout: {1}".format(uri,self.timeout))
         response = self.session.get(uri,stream=True,verify=False,timeout=self.timeout)
         response.raise_for_status()
-        size = long(response.headers['content-length'])
+        size = int(response.headers['content-length'])
         response.close()
         return size
     def exists(self,uri):
@@ -124,7 +124,7 @@ class HTTP(osaka.base.StorageBase):
         response.raise_for_status()
         chunks = response.iter_content(chunk_size=self.BLOCK_SIZE)
         try:
-            first = chunks.next()
+            first = next(chunks)
         except StopIteration:
             first = ""
         if first.startswith("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""):
@@ -141,7 +141,7 @@ class HTTP(osaka.base.StorageBase):
         response.raise_for_status()
         chunks = response.iter_content(chunk_size=self.BLOCK_SIZE)
         try:
-            first = chunks.next()
+            first = next(chunks)
         except StopIteration:
             first = ""
         response.close()

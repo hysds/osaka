@@ -3,7 +3,7 @@ Created on Apr 27, 2016
 
 @author: mstarch
 '''
-import urlparse
+import urllib.parse
 import osaka.utils
 
 class StorageBase(object):
@@ -24,7 +24,7 @@ class StorageBase(object):
         @param uri: uri for which to get a backend
         '''
         clazz.loadBackends()
-        searching = urlparse.urlparse(uri).scheme.rstrip("://")
+        searching = urllib.parse.urlparse(uri).scheme.rstrip("://")
         try:
             return clazz.map[searching]()
         except Exception as e:

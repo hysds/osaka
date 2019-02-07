@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 '''
 Example of a storage handler used with Osaka.
 parsed from the url:

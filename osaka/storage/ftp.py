@@ -3,7 +3,7 @@ An Osaka backend that connects to ftp
 @author mstarch
 '''
 import re
-import urlparse
+import urllib.parse
 import datetime
 import os.path
 import json
@@ -29,7 +29,7 @@ class FTP(osaka.base.StorageBase):
         @param uri - ftp uri to connect to
         @param params - optional, parameters for the connection
         '''
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         netloc = parsed.netloc
         username = parsed.username
         password = parsed.password
@@ -55,7 +55,7 @@ class FTP(osaka.base.StorageBase):
         @param uri: uri to get
         '''
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        filename = urlparse.urlparse(uri).path
+        filename = urllib.parse.urlparse(uri).path
         fname = "/tmp/osaka-ftp-"+str(datetime.datetime.now())
         with open(fname, "w") as tmpf:
             self.ftp.retrbinary('RETR %s' % filename, tmpf.write)
@@ -83,7 +83,7 @@ class FTP(osaka.base.StorageBase):
         List URI
         @param uri: uri to list
         '''
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         filename = parsed.path
         listing = self.ftp.nlst(filename)
         base = parsed.netloc if parsed.netloc.endswith("/") else parsed.netloc + "/" 
@@ -119,7 +119,7 @@ class FTP(osaka.base.StorageBase):
         Size this uri from backend
         @param uri: uri to size
         '''
-        filename = urlparse.urlparse(uri).path
+        filename = urllib.parse.urlparse(uri).path
         return self.size(filename) 
     def rm(self,uri):
         '''

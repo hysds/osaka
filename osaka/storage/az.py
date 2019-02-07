@@ -1,6 +1,6 @@
 import re
 import azure.common
-import urlparse
+import urllib.parse
 import datetime
 import os.path
 import json
@@ -36,7 +36,7 @@ class Azure(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Opening Azure handler")
         self.cache = {}
         uri = re.compile("^azure").sub("http",uri)
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         session_kwargs = {}
 
         # attempt to get account_name (as username) from url or parameters array
@@ -83,7 +83,7 @@ class Azure(osaka.base.StorageBase):
         @param uri: uri to get
         '''
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         fname = "/tmp/osaka-azure-"+str(datetime.datetime.now())
         with open(fname,"w"):
             pass
@@ -99,7 +99,7 @@ class Azure(osaka.base.StorageBase):
         @param uri: uri to put
         '''
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         self.service.create_container(container)
         with osaka.storage.file.FileHandlerConversion(stream) as fn:
             self.service.create_blob_from_path(container, key, fn)
@@ -115,8 +115,8 @@ class Azure(osaka.base.StorageBase):
         ret = []
         #Dump the cache if possible
         if "__top__" in self.cache and uri == self.cache["__top__"]:
-            return [ k for k in self.cache.keys() if k != "__top__" ]
-        parsed = urlparse.urlparse(uri)
+            return [ k for k in list(self.cache.keys()) if k != "__top__" ]
+        parsed = urllib.parse.urlparse(uri)
         container,key = osaka.utils.get_container_and_path(parsed.path)
         #key in this instance is used as a prefix to be filtered out.
         collection = self.service.list_blobs(container, key)
@@ -178,7 +178,7 @@ class Azure(osaka.base.StorageBase):
         '''
         if uri in self.cache:
             return self.cache[uri].size
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         properties = self.service.get_blob_properties(container, key).properties
         return properties.content_length
     def rm(self,uri):
@@ -186,7 +186,7 @@ class Azure(osaka.base.StorageBase):
         Remove this uri from backend
         @param uri: uri to remove
         '''
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         self.service.delete_blob(container,key)
 
     def getKeysWithPrefixURI(self,uri):
@@ -194,7 +194,7 @@ class Azure(osaka.base.StorageBase):
         Keys with prefix of given URI
         @param uri: prefix URI
         '''
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         container,key = osaka.utils.get_container_and_path(parsed.path)
         collection = self.service.list_blobs(container, key)
         return [item.name + "/" + item.key for item in collection]

@@ -1,4 +1,4 @@
-import urlparse
+import urllib.parse
 import shutil
 import os
 import re
@@ -43,7 +43,7 @@ class File(osaka.base.StorageBase):
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        fh = open(urlparse.urlparse(uri).path,"r")
+        fh = open(urllib.parse.urlparse(uri).path,"r")
         self.files.append(fh)
         return fh
     def put(self,stream,uri):
@@ -55,14 +55,14 @@ class File(osaka.base.StorageBase):
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
-        path = urlparse.urlparse(uri).path
+        path = urllib.parse.urlparse(uri).path
         try:
             os.makedirs(os.path.dirname(path))
         except Exception as e:
             osaka.utils.LOGGER.debug("Exception while creating directories {0}".format(e))
         with open(path,"w") as out:
             shutil.copyfileobj(stream,out)
-        return osaka.utils.get_disk_usage(urlparse.urlparse(uri).path)
+        return osaka.utils.get_disk_usage(urllib.parse.urlparse(uri).path)
     def size(self,uri):
         '''
         Size the URI (file) as a steam
@@ -71,7 +71,7 @@ class File(osaka.base.StorageBase):
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        return os.path.getsize(urlparse.urlparse(uri).path)
+        return os.path.getsize(urllib.parse.urlparse(uri).path)
     def exists(self,uri):
         '''
         Does the URI exist?
@@ -79,7 +79,7 @@ class File(osaka.base.StorageBase):
         '''
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
-        exts = os.path.exists(urlparse.urlparse(uri).path)
+        exts = os.path.exists(urllib.parse.urlparse(uri).path)
         osaka.utils.LOGGER.debug("Does URI {0} exist: {1}".format(uri,exts))
         return exts
     def list(self,uri):
@@ -89,7 +89,7 @@ class File(osaka.base.StorageBase):
         '''
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
-        tmp = urlparse.urlparse(uri).path
+        tmp = urllib.parse.urlparse(uri).path
         if os.path.exists(tmp) and not os.path.isdir(tmp):
             return [tmp]
         return [os.path.join(uri,item) for item in os.listdir(tmp)]
@@ -100,7 +100,7 @@ class File(osaka.base.StorageBase):
         '''
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
-        isDir = os.path.isdir(urlparse.urlparse(uri).path)
+        isDir = os.path.isdir(urllib.parse.urlparse(uri).path)
         osaka.utils.LOGGER.debug("Is URI {0} a directory: {1} {2}".format(uri,isDir,self.exists(uri)))
         return isDir
     def isObjectStore(self): return False
@@ -121,7 +121,7 @@ class File(osaka.base.StorageBase):
         '''
         if uri.startswith("file:") and not uri.startswith("file:///"):
             raise Exception("Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris")
-        path = urlparse.urlparse(uri).path
+        path = urllib.parse.urlparse(uri).path
         if os.path.isdir(path):
             shutil.rmtree(path)
         else:

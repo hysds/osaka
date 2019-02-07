@@ -1,9 +1,9 @@
-from __future__ import print_function
+
 
 import os
 import os.path
 import stat
-import urlparse
+import urllib.parse
 import paramiko
 '''
 A backend used to handle stfp using parimiko
@@ -51,7 +51,7 @@ class SFTP(object):
         @param path - local path of file/folder to put
         @param url - url to put file/folder to
         '''
-        rpath = urlparse.urlparse(url).path.lstrip("/")
+        rpath = urllib.parse.urlparse(url).path.lstrip("/")
         print("\n\n\n\nUploading:",path);
         if not os.path.isdir(path):
             print("As file");
@@ -93,14 +93,14 @@ class SFTP(object):
         @param url - url to get file/folder from
         @param path - path to place fetched files
         '''
-        rpath = urlparse.urlparse(url).path
+        rpath = urllib.parse.urlparse(url).path
         self.sftp.get(rpath,path)
     def rm(self,url):
         '''
         Remove the item
         @param url - url to remove
         '''
-        rpath = urlparse.urlparse(url).path
+        rpath = urllib.parse.urlparse(url).path
         self.sftp.remove(rpath)
     def close(self):
         '''

@@ -1,10 +1,10 @@
 import re
 from google.cloud import storage
 from google.cloud.exceptions import Conflict, Forbidden, NotFound
-import urlparse
+import urllib.parse
 import datetime
 import os.path
-from StringIO import StringIO
+from io import StringIO
 
 import osaka.base
 import osaka.utils 
@@ -34,7 +34,7 @@ class GS(osaka.base.StorageBase):
         '''
         osaka.utils.LOGGER.debug("Opening GS handler")
         uri = re.compile("^gs").sub("http",uri)
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         session_kwargs = {}
         kwargs = {}
         check_host = parsed.hostname if not "location" in params else params["location"]
@@ -75,7 +75,7 @@ class GS(osaka.base.StorageBase):
         @param uri: uri to get
         '''
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container,create=False)
         blob = bucket.blob(key)
         stream = StringIO(blob.download_as_string())
@@ -88,7 +88,7 @@ class GS(osaka.base.StorageBase):
         @param uri: uri to put
         '''
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container)
         CHUNK_SIZE = 2147221504 # Bytes
 	blob = bucket.blob(key, chunk_size=CHUNK_SIZE)
@@ -101,7 +101,7 @@ class GS(osaka.base.StorageBase):
         Get the size of this object
         '''
         osaka.utils.LOGGER.debug("Getting size from URI: {0}".format(uri))
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container,create=False)
         blob = bucket.blob(key)
         raise blob.size
@@ -112,7 +112,7 @@ class GS(osaka.base.StorageBase):
         @param uri: uri to check
         '''
         osaka.utils.LOGGER.debug("Running list all children")
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         container,key = osaka.utils.get_container_and_path(parsed.path)
         bucket = self.bucket(container,create=False)
         collection = bucket.list_blobs(prefix=key)
@@ -166,7 +166,7 @@ class GS(osaka.base.StorageBase):
         Remove this uri from backend
         @param uri: uri to remove
         '''
-        container,key = osaka.utils.get_container_and_path(urlparse.urlparse(uri).path)
+        container,key = osaka.utils.get_container_and_path(urllib.parse.urlparse(uri).path)
         bucket = self.bucket(container,create=False)
         bucket.delete_blob(key)
         
@@ -176,7 +176,7 @@ class GS(osaka.base.StorageBase):
         Keys with prefix of given URI
         @param uri: prefix URI
         '''
-        parsed = urlparse.urlparse(uri)
+        parsed = urllib.parse.urlparse(uri)
         container,key = osaka.utils.get_container_and_path(parsed.path)
         bucket = self.bucket(container,create=False)
         collection = bucket.list_blobs(prefix=key)
@@ -190,5 +190,5 @@ class GS(osaka.base.StorageBase):
         '''
         try:
             return self.gs.get_bucket(bucket)
-        except NotFound, e:
+        except NotFound as e:
             return self.gs.create_bucket(bucket)

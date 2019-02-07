@@ -1,6 +1,6 @@
 import logging
 import subprocess
-import urlparse
+import urllib.parse
 
 LOGGER = logging.getLogger("osaka")
 
@@ -15,7 +15,7 @@ def get_uri_username_and_password(uri):
     @param uri: URI for the end point
     @return: tuple containing the username/password from the URI 
     '''
-    temp = urlparse.urlparse(uri)
+    temp = urllib.parse.urlparse(uri)
     return (temp.username,temp.password)
 def get_uri_scheme_and_hostname(uri):
     '''
@@ -23,7 +23,7 @@ def get_uri_scheme_and_hostname(uri):
     @param uri: URI for the end point
     @return: tuple containing the scheme/hostname from the URI 
     '''
-    temp = urlparse.urlparse(uri)
+    temp = urllib.parse.urlparse(uri)
     host = temp.hostname + ("" if temp.port is None else ":"+str(temp.port))
     return (temp.scheme,host)
 def get_uri_path(uri):
@@ -32,7 +32,7 @@ def get_uri_path(uri):
     @param uri: uri from which to parse path
     @return: path portion of URI
     '''
-    temp = urlparse.urlparse(uri)
+    temp = urllib.parse.urlparse(uri)
     return temp.path
 def get_container_and_path(urlpath):
     '''
@@ -81,7 +81,7 @@ def product_composite_iterator(base, handle, callback, include_top=False):
         uris = handle.listAllChildren(base)
         if include_top:
             uris.append(base)
-    return map(callback, uris)
+    return list(map(callback, uris))
 
 class OsakaException(Exception): pass
 class CooperationNotPossibleException(OsakaException): pass

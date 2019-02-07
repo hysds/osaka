@@ -75,11 +75,11 @@ class LockfileTest(unittest.TestCase):
             self.assertTrue(lock.isLocked(), "Lock does not report locked")
             with open(self.lockfile.format(base)) as fp:
                 data = json.load(fp)
-            self.assertEquals(data.get("source", None), obj, "Lockfile source not correct")
-            self.assertEquals(lock.getLockMetadata("source"), obj, "Lock source not correct")
+            self.assertEqual(data.get("source", None), obj, "Lockfile source not correct")
+            self.assertEqual(lock.getLockMetadata("source"), obj, "Lock source not correct")
             #Check timeout error
-            self.assertNotEquals(data.get("error", None), None, "Error not set")
-            self.assertNotEquals(lock.getLockMetadata("error"), None, "Error not set")
+            self.assertNotEqual(data.get("error", None), None, "Error not set")
+            self.assertNotEqual(lock.getLockMetadata("error"), None, "Error not set")
     def test_collaborate_and_error(self):
         '''
         Test that osaka collaborate will return the error found with another instance
