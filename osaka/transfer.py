@@ -4,6 +4,7 @@ Created on Apr 27, 2016
 @author: mstarch
 '''
 import os
+import traceback
 import json
 import socket
 import datetime
@@ -84,7 +85,7 @@ class Transferer(object):
                 break
             except Exception as e:
                 osaka.utils.LOGGER.warning(
-                    "Exception occurred, retrying({0}): {1}".format(retry+1, e))
+                    "Exception occurred, retrying({0}): {1}\n{2}".format(retry+1, e, traceback.format_exc()))
             finally:
                 shandle.close()
                 dhandle.close()

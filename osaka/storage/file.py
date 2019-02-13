@@ -3,6 +3,7 @@ import shutil
 import os
 import re
 import datetime
+import io
 
 import osaka.utils
 import osaka.base
@@ -70,7 +71,8 @@ class File(osaka.base.StorageBase):
         except Exception as e:
             osaka.utils.LOGGER.debug(
                 "Exception while creating directories {0}".format(e))
-        with open(path, "w") as out:
+        flags = 'wb' if isinstance(stream, io.BufferedIOBase) else 'w'
+        with open(path, flags) as out:
             shutil.copyfileobj(stream, out)
         return osaka.utils.get_disk_usage(urllib.parse.urlparse(uri).path)
 
