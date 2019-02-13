@@ -1,3 +1,11 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import open
+from builtins import object
+from future import standard_library
+standard_library.install_aliases()
 import urllib.parse
 import shutil
 import os
@@ -154,7 +162,7 @@ class File(osaka.base.StorageBase):
             os.remove(path)
 
 
-class FileHandlerConversion():
+class FileHandlerConversion(object):
     '''
     This class allows a user to create a file-based approach to handling streams for backends that
     cannot handle their streams independently.

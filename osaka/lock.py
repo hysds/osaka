@@ -1,4 +1,11 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
 
+from builtins import str
+from future import standard_library
+standard_library.install_aliases()
 import os
 import json
 import socket
@@ -64,7 +71,7 @@ class Lock(object):
                "osaka-lock-secret": self.secret}
         tmp.update(lockMetadata)
         # tmp.update(self.lockExtras)
-        stream = io.StringIO(json.dumps(tmp))
+        stream = io.StringIO(str(json.dumps(tmp)))
         with PermTemp(self.luri, self.handle, self.params) as handle:
             # Not perfect exception
             if handle.exists(self.luri):
