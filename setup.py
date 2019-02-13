@@ -10,13 +10,14 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'requests>=2.7.0', 'easywebdav==1.2.0', 'fabric==1.10.1',
-        'filechunkio==1.6.0','azure-storage-blob==1.4.0', 'boto3>=1.2.6',
-        'google-cloud-storage>=0.22.0', 'six>=1.10.0', 'configparser>=3.5.0'
+        'requests>=2.7.0', 'easywebdav==1.2.0', 'filechunkio==1.6.0',
+        'azure-storage-blob==1.4.0', 'boto3>=1.2.6',
+        'google-cloud-storage>=0.22.0', 'six>=1.10.0',
+        'configparser>=3.5.0'
     ],
     entry_points={
-          'console_scripts': [
-              'osaka = osaka.__main__:main'
-          ]
-      }
+        'console_scripts': [
+            'osaka = osaka.__main__:main'
+        ]
+    }
 )
