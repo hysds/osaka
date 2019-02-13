@@ -19,7 +19,7 @@ setup(
         'requests>=2.7.0', 'easywebdav==1.2.0', 'filechunkio==1.6.0',
         'azure-storage-blob==1.4.0', 'boto3>=1.2.6',
         'google-cloud-storage>=0.22.0', 'six>=1.10.0',
-        'configparser>=3.5.0'
+        'configparser>=3.5.0', 'future>=0.17.1'
     ],
     entry_points={
         'console_scripts': [
