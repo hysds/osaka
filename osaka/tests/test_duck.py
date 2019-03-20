@@ -1,39 +1,48 @@
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
 import unittest
 import inspect
 import osaka.base
+
 
 class DuckTest(unittest.TestCase):
     '''
     This class runs against all Osaka storage backends, making sure that they
     meet all the necessary requirements to be Osaka storage backends.
     '''
+
     def test_ModuleDuckTypeing(self):
         '''
         Tests the duck-typing of the Osaka storage modules
         '''
         definitions = {
-               "__init__":   ["self"],
-               "getSchemes": [],
-               "connect":    ["self","uri","params"],
-               "get":        ["self","uri"],
-               "put":        ["self","stream","uri"],
-               "listAllChildren":["self","uri"],
-               "exists":     ["self","uri"],
-               "list":       ["self","uri"],
-               "isComposite":["self","uri"],
-               "close":      ["self"],
-               "rm":         ["self","uri"],
-               "size":       ["self","uri"]
-              }
-        # Loop through the classes found by loading the backends and 
+            "__init__":   ["self"],
+            "getSchemes": [],
+            "connect":    ["self", "uri", "params"],
+            "get":        ["self", "uri"],
+            "put":        ["self", "stream", "uri"],
+            "listAllChildren": ["self", "uri"],
+            "exists":     ["self", "uri"],
+            "list":       ["self", "uri"],
+            "isComposite": ["self", "uri"],
+            "close":      ["self"],
+            "rm":         ["self", "uri"],
+            "size":       ["self", "uri"]
+        }
+        # Loop through the classes found by loading the backends and
         # ensure they are up-to-spec
-        for scheme,clazz in osaka.base.StorageBase.loadBackends().iteritems():
+        for scheme, clazz in osaka.base.StorageBase.loadBackends().items():
             # Loop through all definitions making sure they exist in the specification
-            for func,values in definitions.iteritems():
+            for func, values in definitions.items():
                 try:
-                    attr = getattr(clazz,func)
+                    attr = getattr(clazz, func)
                 except AttributeError:
-                    self.assertTrue(False,"{0} does not have function: {1}".format(clazz.__name__,func))
+                    self.assertTrue(
+                        False, "{0} does not have function: {1}".format(clazz.__name__, func))
                 args, varargs, keywords, defaults = inspect.getargspec(attr)
                 # Remove defaulted arguments if possible
                 if not args is None and not defaults is None:
@@ -45,4 +54,5 @@ class DuckTest(unittest.TestCase):
                             tmp.append(arg)
                     args = tmp
                 # Go through list of required arguments
-                self.assertEquals(args, values, "{0}.{1} has invalid arguments: {2} vs {3}".format(clazz.__name__,attr.__name__,values,args))
+                self.assertEqual(args, values, "{0}.{1} has invalid arguments: {2} vs {3}".format(
+                    clazz.__name__, attr.__name__, values, args))
