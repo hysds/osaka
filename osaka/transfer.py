@@ -50,6 +50,7 @@ class Transferer(object):
         # Get handlers for the source and destination
         shandle = osaka.base.StorageBase.getStorageBackend(source)
         dhandle = osaka.base.StorageBase.getStorageBackend(dest)
+        err = RuntimeError("Max retries reached but true exception not preserved.")
         for retry in range(0, retries+1):
             try:
                 shandle.connect(source, params)
@@ -95,12 +96,13 @@ class Transferer(object):
             except Exception as e:
                 osaka.utils.LOGGER.warning(
                     "Exception occurred, retrying({0}): {1}\n{2}".format(retry+1, e, traceback.format_exc()))
+                err = e
             finally:
                 shandle.close()
                 dhandle.close()
         # If we never reach the break, reraise the last exception that happened
         else:
-            raise
+            raise err
         if measure and not metrics is None:
             self.writeMetrics(metrics, metricsOutput)
 
