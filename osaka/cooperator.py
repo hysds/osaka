@@ -37,7 +37,7 @@ class Cooperator(object):
             self.dlock.lock(lockMetadata)
             self.primary = True
         except OsakaException as ose:
-            if not "Lock file already locked" in ose:
+            if not "Lock file already locked" in str(ose):
                 raise
             self.whenLocked()
         return self
