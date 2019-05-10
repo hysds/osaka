@@ -1,7 +1,11 @@
-Object-Store Abstraction ? Architecture (Osaka)
-===============================================
+# Object-Store Abstraction ? Architecture (Osaka)
 
-Osaka is an object storage abstraction system allowing the user to push generic file object to various backend storage system. These different backends are selected based on the scheme element of the URI for the file.  Currently, Osaka must have one endpoint that exists on the local file system.
+[![CircleCI](https://circleci.com/gh/hysds/osaka.svg?style=svg)](https://circleci.com/gh/hysds/osaka)
+
+Osaka is an object storage abstraction system allowing the user to push generic 
+file object to various backend storage system. These different backends are 
+selected based on the scheme element of the URI for the file.  Currently, Osaka 
+must have one endpoint that exists on the local file system.
 
 | Schemes | Push Implemented | Pull Implemented | Tested | Notes: |
 | ------- | ---------------- | ---------------- |--------|---------------------------------|
