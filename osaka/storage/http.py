@@ -181,7 +181,7 @@ class HTTP(osaka.base.StorageBase):
         except StopIteration:
             first = ""
         response.close()
-        if first.startswith("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""):
+        if isinstance(first, str) and first.startswith("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""):
             osaka.utils.LOGGER.debug(
                 "Is URI {0} composite? {1}".format(uri, True))
             return True
