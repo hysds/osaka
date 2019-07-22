@@ -1,9 +1,12 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from builtins import str
+
 from future import standard_library
+
 standard_library.install_aliases()
 import re
 import os
@@ -16,12 +19,26 @@ import osaka.tests.util
 
 # Turn off requests warning
 import requests
+
 requests.packages.urllib3.disable_warnings()
 '''
 Created on Aug 29, 2016
 
 @author: mstarch
 '''
+
+
+class SimpleTransferTest(unittest.TestCase):
+
+    def test_http_download_to_file(self):
+        source_uri = "http://landsat-pds.s3.amazonaws.com/scene_list.gz"
+        dest_uri = "scene_list.gz"
+
+        try:
+            osaka.main.transfer(source_uri, dest_uri, params={}, measure=False, output="./pge_metrics.json",
+                                lockMetadata={}, retries=0, force=False, ncoop=False, noclobber=False)
+        finally:
+            os.remove(dest_uri)
 
 
 class TransferTest(unittest.TestCase):
@@ -56,7 +73,7 @@ class TransferTest(unittest.TestCase):
         # A list of output only locations
         self.out = []
         # Construct path to checked-in test cases
-        self.base = os.path.dirname(osaka.__file__)+"/../resources/objects/"
+        self.base = os.path.dirname(osaka.__file__) + "/../resources/objects/"
         self.objects = [os.path.join(self.base, listing) for listing in os.listdir(
             self.base) if listing.startswith("test-")]
         osaka.tests.util.scpWorkerObject(self, self.objects[1])
@@ -140,6 +157,7 @@ class TransferTest(unittest.TestCase):
                 self.checkObject(os.path.join(
                     scratch, os.path.basename(remote), os.path.basename(remote)))
             osaka.main.rmall(scratch)
+
         # First run the in-out tests
         self.test_InOuts(reupload)
 
@@ -190,7 +208,8 @@ class TransferTest(unittest.TestCase):
         Checks an object in against the original object contained in the Osaka module
         @param obj - object to test (by name) against original
         '''
-        return subprocess.call(["diff", "-r", os.path.join(self.base, os.path.basename(obj), obj), obj], stdout=osaka.tests.util.DEVNULL, stderr=osaka.tests.util.DEVNULL) == 0
+        return subprocess.call(["diff", "-r", os.path.join(self.base, os.path.basename(obj), obj), obj],
+                               stdout=osaka.tests.util.DEVNULL, stderr=osaka.tests.util.DEVNULL) == 0
 
     def uploadInputObjects(self, uriBase):
         '''
