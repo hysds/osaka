@@ -1,21 +1,23 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
 from __future__ import absolute_import
-from builtins import open
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from builtins import object
+from builtins import open
+
+import urllib3.response
 from future import standard_library
+
 standard_library.install_aliases()
 import urllib.parse
 import shutil
 import os
-import re
 import datetime
 import io
 
 import osaka.utils
 import osaka.base
-
 
 '''
 File handling using local moves and/or fabric 
@@ -79,7 +81,9 @@ class File(osaka.base.StorageBase):
         except Exception as e:
             osaka.utils.LOGGER.debug(
                 "Exception while creating directories {0}".format(e))
-        flags = 'wb' if isinstance(stream, io.BufferedIOBase) else 'w'
+
+        flags = 'wb' if isinstance(stream, io.BufferedIOBase) or isinstance(stream,
+                                                                            urllib3.response.HTTPResponse) else 'w'
         with open(path, flags) as out:
             shutil.copyfileobj(stream, out)
         return osaka.utils.get_disk_usage(urllib.parse.urlparse(uri).path)
@@ -133,7 +137,8 @@ class File(osaka.base.StorageBase):
             "Is URI {0} a directory: {1} {2}".format(uri, isDir, self.exists(uri)))
         return isDir
 
-    def isObjectStore(self): return False
+    def isObjectStore(self):
+        return False
 
     def close(self):
         '''
@@ -179,7 +184,7 @@ class FileHandlerConversion(object):
         if self.filename is None or not os.path.exists(self.filename):
             self.handler = File()
             self.filename = "/tmp/osaka-temporary-" + \
-                datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f")
+                            datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f")
             self.handler.connect(self.filename)
             self.handler.put(stream, self.filename)
 
