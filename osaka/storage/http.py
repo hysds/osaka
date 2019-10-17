@@ -170,10 +170,8 @@ class HTTP(osaka.base.StorageBase):
         Detect if this uri is a composite uri (uri to collection of objects i.e. directory)
         @param uri: uri to list
         '''
-        osaka.utils.LOGGER.debug(
-            "Is URI {0} composite? Timeout: {1}".format(uri, self.timeout))
-        response = self.session.get(
-            uri, stream=True, verify=False, timeout=self.timeout)
+        osaka.utils.LOGGER.debug("Is URI {0} composite? Timeout: {1}".format(uri, self.timeout))
+        response = self.session.get(uri, stream=True, verify=False, timeout=self.timeout)
         response.raise_for_status()
         chunks = response.iter_content(chunk_size=self.BLOCK_SIZE)
         try:
@@ -182,14 +180,16 @@ class HTTP(osaka.base.StorageBase):
             first = ""
         response.close()
         if isinstance(first, str) and first.startswith("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""):
-            osaka.utils.LOGGER.debug(
-                "Is URI {0} composite? {1}".format(uri, True))
+            osaka.utils.LOGGER.debug("Is URI {0} composite? {1}".format(uri, True))
             return True
-        osaka.utils.LOGGER.debug(
-            "Is URI {0} composite? {1}".format(uri, False))
+        elif isinstance(first, bytes) and first.startswith(b"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\""):
+            osaka.utils.LOGGER.debug("Is URI {0} composite? {1}".format(uri, True))
+            return True
+        osaka.utils.LOGGER.debug("Is URI {0} composite? {1}".format(uri, False))
         return False
 
-    def isObjectStore(self): return False
+    def isObjectStore(self):
+        return False
 
     def close(self):
         '''
