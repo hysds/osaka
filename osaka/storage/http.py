@@ -27,7 +27,7 @@ This Osaka backend uses requests to handle HTTP requests.
 @author starchmd
 '''
 
-class 202StatusException(Exception):
+class HTTPStatusCode200Exception(Exception):
     """Exception class for 202 HTTP status code."""
     pass
 
@@ -94,7 +94,7 @@ class HTTP(osaka.base.StorageBase):
 
         # catch 202 status code
         if response.status_code == 202:
-            raise 202StatusException("Received 202 HTTP status code: {}".format(response.text))
+            raise HTTPStatusCode200Exception("Received 202 HTTP status code: {}".format(response.text))
         
         if text:
             return response.text
