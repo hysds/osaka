@@ -8,6 +8,7 @@ from builtins import str
 from future import standard_library
 standard_library.install_aliases()
 import re
+import backoff
 import boto3
 import botocore
 import urllib.parse
@@ -114,6 +115,20 @@ class S3(osaka.base.StorageBase):
         '''
         return ["s3", "s3s"]
 
+    @backoff.on_exception(
+        backoff.expo,
+        Exception,
+        max_value=3,
+        max_time=13,
+    )
+    def reload_obj(self, obj):
+        '''
+        Backoff-wrapped call to the boto3 S3 `Object.load()` method to mitigate
+        encountered errors due to S3's eventual consistency model.
+        @param obj: boto3 S3 Object object
+        '''
+        obj.load()
+
     def get(self, uri):
         '''
         Gets the URI (s3 or s3s) as a steam
@@ -149,7 +164,7 @@ class S3(osaka.base.StorageBase):
             extra = {"ServerSideEncryption": self.encrypt}
         with osaka.storage.file.FileHandlerConversion(stream) as fn:
             obj.upload_file(fn, ExtraArgs=extra)
-        obj.load()
+        self.reload_obj(obj)
         return obj.content_length
 
     def listAllChildren(self, uri):

@@ -9,6 +9,7 @@ jobs:
           name: Test
           command: |
             source $HOME/.bash_profile
+            pip install moto
             pytest .
 
 workflows:

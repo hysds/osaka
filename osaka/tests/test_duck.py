@@ -43,7 +43,7 @@ class DuckTest(unittest.TestCase):
                 except AttributeError:
                     self.assertTrue(
                         False, "{0} does not have function: {1}".format(clazz.__name__, func))
-                args, varargs, keywords, defaults = inspect.getargspec(attr)
+                args, varargs, keywords, defaults, kwonlyargs, kwonlydefaults, annotations = inspect.getfullargspec(attr)
                 # Remove defaulted arguments if possible
                 if not args is None and not defaults is None:
                     count = len(args)-len(defaults)
