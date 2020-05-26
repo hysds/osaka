@@ -78,7 +78,7 @@ class SFTP(object):
             print("As file")
             try:
                 self.sftp.mkdir(os.path.dirname(rpath))
-            except IOError as e:
+            except IOError:
                 pass
             dest = rpath
             try:
@@ -90,13 +90,13 @@ class SFTP(object):
         print("As Dir")
         try:
             self.sftp.mkdir(rpath)
-        except IOError as e:
+        except IOError:
             pass
         for dirpath, dirname, filenames in os.walk(path):
             extra = os.path.relpath(dirpath, os.path.dirname(path))
             try:
                 self.sftp.mkdir(os.path.join(rpath, extra))
-            except IOError as e:
+            except IOError:
                 pass
             for filename in filenames:
                 self.upload(

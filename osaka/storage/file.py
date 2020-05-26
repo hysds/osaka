@@ -216,5 +216,5 @@ class FileHandlerConversion(object):
         @param exc_val: unused
         @param exc_tb: unused
         """
-        if not self.handler is None:
+        if self.handler is not None:
             self.handler.rm(self.filename)

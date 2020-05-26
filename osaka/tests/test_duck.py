@@ -56,7 +56,7 @@ class DuckTest(unittest.TestCase):
                     annotations,
                 ) = inspect.getfullargspec(attr)
                 # Remove defaulted arguments if possible
-                if not args is None and not defaults is None:
+                if args is not None and defaults is not None:
                     count = len(args) - len(defaults)
                     tmp = args[:count]
                     # Add back in any defined, but defaulted values

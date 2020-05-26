@@ -1,7 +1,6 @@
 import io
 import unittest
 from mock import patch
-import requests.exceptions
 from moto import mock_s3
 import botocore
 from botocore.exceptions import ClientError

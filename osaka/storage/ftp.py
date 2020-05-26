@@ -11,11 +11,9 @@ from builtins import str
 from future import standard_library
 
 standard_library.install_aliases()
-import re
 import urllib.parse
 import datetime
 import os.path
-import json
 import osaka.base
 import osaka.utils
 import osaka.storage.file
@@ -84,7 +82,7 @@ class FTP(osaka.base.StorageBase):
         @param stream: stream to upload
         @param uri: uri to put
         """
-        raise OsakaException("Not implemented; implementation deferred")
+        raise NotImplementedError("Not implemented; implementation deferred")
 
     def exists(self, uri):
         """
@@ -153,4 +151,4 @@ class FTP(osaka.base.StorageBase):
         Remove this uri from backend
         @param uri: uri to remove
         """
-        raise OsakaException("Not implemented; implementation deferred")
+        raise NotImplementedError("Not implemented; implementation deferred")

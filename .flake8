@@ -4,8 +4,12 @@ max-line-length = 120
 ignore =
     # E203: whitespace before ':' 
     E203,
+    # E402: module level import not at top of file
+    E402,
     # E501: line too long
     E501,
+    # W291: trailing whitespace
+    W291,
     # W503: line break before binary operator
     W503,
     # E722: do not use bare 'except'

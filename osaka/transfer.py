@@ -16,7 +16,6 @@ standard_library.install_aliases()
 import os
 import traceback
 import json
-import socket
 import datetime
 
 # Osaka imports
@@ -126,7 +125,7 @@ class Transferer(object):
         # If we never reach the break, reraise the last exception that happened
         else:
             raise err
-        if measure and not metrics is None:
+        if measure and metrics is not None:
             self.writeMetrics(metrics, metricsOutput)
 
     def transfer_uri(self, source, shandle, dest, dhandle):

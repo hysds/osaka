@@ -8,10 +8,8 @@ from future import standard_library
 standard_library.install_aliases()
 import re
 from google.cloud import storage
-from google.cloud.exceptions import Conflict, Forbidden, NotFound
+from google.cloud.exceptions import NotFound
 import urllib.parse
-import datetime
-import os.path
 from io import StringIO
 
 import osaka.base
@@ -46,18 +44,18 @@ class GS(osaka.base.StorageBase):
         parsed = urllib.parse.urlparse(uri)
         session_kwargs = {}
         kwargs = {}
-        check_host = parsed.hostname if not "location" in params else params["location"]
-        if not parsed.hostname is None:
+        parsed.hostname if "location" not in params else params["location"]
+        if parsed.hostname is not None:
             kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
         else:
             kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, kwargs["endpoint_url"])
-        if not parsed.port is None:
+        if parsed.port is not None:
             kwargs["endpoint_url"] = "%s:%s" % (kwargs["endpoint_url"], parsed.port)
-        if not parsed.username is None:
+        if parsed.username is not None:
             session_kwargs["gcp_access_key_id"] = parsed.username
         elif "gcp_access_key_id" in params:
             session_kwargs["gcp_access_key_id"] = params["gcp_access_key_id"]
-        if not parsed.password is None:
+        if parsed.password is not None:
             session_kwargs["gcp_secret_access_key"] = parsed.password
         elif "gcp_secret_access_key" in params:
             session_kwargs["gcp_secret_access_key"] = params["gcp_secret_access_key"]
@@ -133,7 +131,7 @@ class GS(osaka.base.StorageBase):
             parsed.scheme
             + "://"
             + parsed.hostname
-            + (":" + str(parsed.port) if not parsed.port is None else "")
+            + (":" + str(parsed.port) if parsed.port is not None else "")
         )
         return [
             uriBase + "/" + container + "/" + item.name
@@ -211,5 +209,5 @@ class GS(osaka.base.StorageBase):
         """
         try:
             return self.gs.get_bucket(bucket)
-        except NotFound as e:
+        except NotFound:
             return self.gs.create_bucket(bucket)

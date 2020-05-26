@@ -17,8 +17,6 @@ logging.basicConfig(level=logging.ERROR)
 try:
     from subprocess import DEVNULL  # py3k
 except ImportError:
-    import os
-
     DEVNULL = open(os.devnull, "wb")
 
 

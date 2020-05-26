@@ -32,8 +32,6 @@ This Osaka backend uses requests to handle HTTP requests.
 class HTTPStatusCode200Exception(Exception):
     """Exception class for 202 HTTP status code."""
 
-    pass
-
 
 class HTTP(osaka.base.StorageBase):
     """
@@ -47,16 +45,15 @@ class HTTP(osaka.base.StorageBase):
         """
         Constructor
         """
-        pass
 
     def connect(self, uri, params={}):
         """
         Connects to the backend
         """
-        self.timeout = 1800.0 if not "timeout" in params else params["timeout"]
+        self.timeout = 1800.0 if "timeout" not in params else params["timeout"]
         parsed = urllib.parse.urlparse(uri)
-        user = None if not "user" in parsed else parsed["user"]
-        password = None if not "password" in parsed else parsed["password"]
+        user = None if "user" not in parsed else parsed["user"]
+        password = None if "password" not in parsed else parsed["password"]
         osaka.utils.LOGGER.debug("Opening HTTP handler")
         if user is None or password is None:
             tmp = self.getNetRCCredentials(uri)
@@ -150,7 +147,7 @@ class HTTP(osaka.base.StorageBase):
             if ret.status_code != 200:
                 raise osaka.utils.OsakaException("Bad response for existence checking")
             return True
-        except Exception as e:
+        except Exception:
             pass
         osaka.utils.LOGGER.debug("HEAD call not allowed, attempting get w/o read")
         try:
@@ -228,7 +225,7 @@ class HTTP(osaka.base.StorageBase):
         Close this backend
         """
         osaka.utils.LOGGER.debug("Closing file handler")
-        if not self.session is None:
+        if self.session is not None:
             self.session.close()
 
     def rm(self, uri):
@@ -273,7 +270,7 @@ class HTTP(osaka.base.StorageBase):
         """
         # try:
         creds = clazz.getNetRCCredentials(uri)
-        if not user is None and not password is None:
+        if user is not None and password is not None:
             creds = {"user": user, "password": password}
         session = requests.Session()
         if creds is None:

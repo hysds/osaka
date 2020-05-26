@@ -8,11 +8,9 @@ from future import standard_library
 
 standard_library.install_aliases()
 import re
-import azure.common
 import urllib.parse
 import datetime
 import os.path
-import json
 import osaka.base
 import osaka.utils
 import osaka.storage.file
@@ -53,20 +51,20 @@ class Azure(osaka.base.StorageBase):
         session_kwargs = {}
 
         # attempt to get account_name (as username) from url or parameters array
-        if not parsed.username is None:
+        if parsed.username is not None:
             session_kwargs["account_name"] = parsed.username
         elif "account_name" in params:
             session_kwargs["account_name"] = params["account_name"]
 
         # attempt to get account_key (as password) from url or parameters array
-        if not parsed.password is None:
+        if parsed.password is not None:
             session_kwargs["account_key"] = parsed.password
         elif "account_key" in params:
             session_kwargs["account_key"] = params["account_key"]
 
         # if neither account_name or account_key is populated, fallback to
         # directly parsing configuration file in ~/.azure
-        if not "account_name" in session_kwargs or not "account_key" in session_kwargs:
+        if "account_name" not in session_kwargs or "account_key" not in session_kwargs:
             # check if ~/.azure/config exists
             azure_config_path = os.environ["HOME"] + "/.azure/config"
             if os.path.isfile(azure_config_path):
@@ -146,7 +144,7 @@ class Azure(osaka.base.StorageBase):
             parsed.scheme
             + "://"
             + parsed.hostname
-            + (":" + str(parsed.port) if not parsed.port is None else "")
+            + (":" + str(parsed.port) if parsed.port is not None else "")
         )
         # Setup cache, and fill it with listings
         self.cache["__top__"] = uri

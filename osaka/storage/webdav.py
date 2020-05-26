@@ -10,12 +10,9 @@ from future import standard_library
 standard_library.install_aliases()
 import os
 import re
-import urllib.parse
 import requests
 import easywebdav
-import datetime
 
-from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 
 import osaka.utils
 import osaka.base
@@ -44,7 +41,6 @@ class DAV(osaka.base.StorageBase):
         """
         Constructor
         """
-        pass
 
     def connect(self, uri, params={}):
         """
@@ -133,7 +129,7 @@ class DAV(osaka.base.StorageBase):
             "Size stream to URI: {0} Note: Using HTTP size".format(uri)
         )
         # Use the standard HTTP handler for getting the product
-        return self.httpHandler.size(re.compile("^dav").sub("http", uri), text=text)
+        return self.httpHandler.size(re.compile("^dav").sub("http", uri))
 
     def exists(self, uri):
         """
@@ -146,7 +142,7 @@ class DAV(osaka.base.StorageBase):
             tmp = self.webdav.exists(path)
             osaka.utils.LOGGER.debug("Does URI {0} exist? {1}".format(uri, tmp))
             return tmp
-        except Exception as e:
+        except Exception:
             pass
         osaka.utils.LOGGER.debug("Failed to check existence using HEAD")
         try:

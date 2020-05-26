@@ -67,23 +67,23 @@ class S3(osaka.base.StorageBase):
         parsed = urllib.parse.urlparse(uri)
         session_kwargs = {}
         kwargs = {}
-        check_host = parsed.hostname if not "location" in params else params["location"]
+        check_host = parsed.hostname if "location" not in params else params["location"]
         for region, ep in get_region_info().items():
             if re.search(ep, check_host):
                 kwargs["endpoint_url"] = ep
                 session_kwargs["region_name"] = region
                 break
-        if not parsed.hostname is None:
+        if parsed.hostname is not None:
             kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
         else:
             kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, kwargs["endpoint_url"])
-        if not parsed.port is None and parsed.port != 80 and parsed.port != 443:
+        if parsed.port is not None and parsed.port != 80 and parsed.port != 443:
             kwargs["endpoint_url"] = "%s:%s" % (kwargs["endpoint_url"], parsed.port)
-        if not parsed.username is None:
+        if parsed.username is not None:
             session_kwargs["aws_access_key_id"] = parsed.username
         elif "aws_access_key_id" in params:
             session_kwargs["aws_access_key_id"] = params["aws_access_key_id"]
-        if not parsed.password is None:
+        if parsed.password is not None:
             session_kwargs["aws_secret_access_key"] = parsed.password
         elif "aws_secret_access_key" in params:
             session_kwargs["aws_secret_access_key"] = params["aws_secret_access_key"]
@@ -161,7 +161,7 @@ class S3(osaka.base.StorageBase):
         bucket = self.bucket(container)
         obj = bucket.Object(key)
         extra = {}
-        if not self.encrypt is None:
+        if self.encrypt is not None:
             extra = {"ServerSideEncryption": self.encrypt}
         with osaka.storage.file.FileHandlerConversion(stream) as fn:
             obj.upload_file(fn, ExtraArgs=extra)
@@ -186,7 +186,7 @@ class S3(osaka.base.StorageBase):
             parsed.scheme
             + "://"
             + parsed.hostname
-            + (":" + str(parsed.port) if not parsed.port is None else "")
+            + (":" + str(parsed.port) if parsed.port is not None else "")
         )
         # Setup cache, and fill it with listings
         self.cache["__top__"] = uri

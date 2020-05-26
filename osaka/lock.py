@@ -15,7 +15,7 @@ import traceback
 # Py2k-3k imports
 try:
     import urllib.urlparse as urlparse
-except ImportError as ime:
+except ImportError:
     import urllib.parse as urlparse
 try:
     import io as io
@@ -103,6 +103,11 @@ class Lock(object):
                 filelike = handle.get(self.luri)
                 return json.load(filelike).get(field, None)
             except Exception as e:
+                osaka.utils.LOGGER.warning(
+                    "Ignoring encountered exception: {}\n{}".format(
+                        e, traceback.format_exc()
+                    )
+                )
                 return None
 
     def setLockMetadata(self, field, value):
@@ -137,7 +142,6 @@ class Lock(object):
             return self.getLockMetadata("osaka-lock-secret") == self.secret
         except:
             return False
-        return ret
 
     @staticmethod
     def getLockUri(ouri):

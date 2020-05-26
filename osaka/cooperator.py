@@ -38,7 +38,7 @@ class Cooperator(object):
             self.dlock.lock(lockMetadata)
             self.primary = True
         except OsakaException as ose:
-            if not "Lock file already locked" in str(ose):
+            if "Lock file already locked" not in str(ose):
                 raise
             self.whenLocked()
         return self
@@ -52,7 +52,7 @@ class Cooperator(object):
         """
         if not self.primary:
             return
-        elif not exception_value is None:
+        elif exception_value is not None:
             self.dlock.setLockMetadata(
                 "error", str(exception_type) + str(exception_value)
             )
@@ -76,7 +76,7 @@ class Cooperator(object):
                     self.source, ex_source, ouri
                 )
             )
-        elif not error is None:
+        elif error is not None:
             raise OsakaException("Cooperation error for {0}: {1}".format(ouri, error))
 
     def isPrimary(self):
@@ -108,7 +108,7 @@ class Spinner(object):
         tm = 0
         while True:
             error = self.dlock.getLockMetadata("error")
-            if not error is None:
+            if error is not None:
                 raise OsakaException("Cooperation error: " + error)
             elif not self.dlock.isLocked():
                 return
