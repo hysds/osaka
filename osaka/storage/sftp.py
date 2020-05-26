@@ -6,32 +6,34 @@ from __future__ import absolute_import
 
 from builtins import int
 from future import standard_library
+
 standard_library.install_aliases()
 import os
 import os.path
 import stat
 import urllib.parse
 import paramiko
-'''
+
+"""
 A backend used to handle stfp using parimiko
 
 @author starchmd
-'''
+"""
 
 
 class SFTP(object):
-    '''
+    """
      SFTP handling for Osaka
-    '''
+    """
 
     def __init__(self, params={}):
-        '''
+        """
         Constructor
-        '''
+        """
         self.keyfile = params["keyfile"] if "keyfile" in params else None
 
     def connect(self, host=None, port=None, user=None, password=None, secure=False):
-        '''
+        """
         Connect to this storage medium.  All data is parsed out of the url and may be None
             scheme:
         @param host - may be None, host to connect to
@@ -42,28 +44,34 @@ class SFTP(object):
                       implementor must handle a None user
         @param password - may be None, password to connect with
                       implementor must handle a None password
-        '''
+        """
         self.client = paramiko.client.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.client.connect(host, port=22 if port is None else int(
-            port), username=user, password=password, key_filename=self.keyfile, timeout=15)
+        self.client.connect(
+            host,
+            port=22 if port is None else int(port),
+            username=user,
+            password=password,
+            key_filename=self.keyfile,
+            timeout=15,
+        )
         self.sftp = self.client.open_sftp()
 
     @classmethod
     def getSchemes(clazz):
-        '''
+        """
         Returns a list of schemes this handler handles
         Note: handling the scheme of another handler produces unknown results
         @returns list of handled schemes
-        '''
+        """
         return ["sftp"]
 
     def put(self, path, url):
-        '''
+        """
         Put the given path to the given url
         @param path - local path of file/folder to put
         @param url - url to put file/folder to
-        '''
+        """
         rpath = urllib.parse.urlparse(url).path.lstrip("/")
         print("\n\n\n\nUploading:", path)
         if not os.path.isdir(path):
@@ -91,37 +99,39 @@ class SFTP(object):
             except IOError as e:
                 pass
             for filename in filenames:
-                self.upload(os.path.join(dirpath, filename),
-                            os.path.join(rpath, extra, filename))
+                self.upload(
+                    os.path.join(dirpath, filename),
+                    os.path.join(rpath, extra, filename),
+                )
 
     def upload(self, path, rpath):
-        '''
+        """
         Uploads a file to remote path
         @param path - path to upload
         @param rpath - remote path to upload to
-        '''
+        """
         self.sftp.put(path, rpath)
         return True
 
     def get(self, url, path):
-        '''
+        """
         Get the url (file/folder) to local path
         @param url - url to get file/folder from
         @param path - path to place fetched files
-        '''
+        """
         rpath = urllib.parse.urlparse(url).path
         self.sftp.get(rpath, path)
 
     def rm(self, url):
-        '''
+        """
         Remove the item
         @param url - url to remove
-        '''
+        """
         rpath = urllib.parse.urlparse(url).path
         self.sftp.remove(rpath)
 
     def close(self):
-        '''
+        """
         Close this connection
-        '''
+        """
         self.client.close()

@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import absolute_import
 from builtins import str
 from future import standard_library
+
 standard_library.install_aliases()
 import os
 import copy
@@ -15,16 +16,17 @@ import requests.exceptions
 
 import osaka.main
 import osaka.tests.util
-'''
+
+"""
 Created on Aug, 2017
 
 @author: mstarch
-'''
+"""
 
 
 # TODO: fix unit tests for circleci
 
-#class NoClobberTest(unittest.TestCase):
+# class NoClobberTest(unittest.TestCase):
 #    '''
 #    A test that tries the rmall function.
 #    '''

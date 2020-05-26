@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import absolute_import
 from builtins import str
 from future import standard_library
+
 standard_library.install_aliases()
 import re
 from google.cloud import storage
@@ -17,29 +18,29 @@ import osaka.base
 import osaka.utils
 import osaka.storage.file
 
-'''
+"""
 google storage connection service
 @author starchmd,gmanipon
-'''
+"""
 
 
 class GS(osaka.base.StorageBase):
-    '''
+    """
     Handles GS file copies
-    '''
+    """
 
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         self.files = []
 
     def connect(self, uri, params={}):
-        '''
+        """
         Connects to the backend
         @param uri - gs uri for resource
         @param params - optional, may contain: location
-        '''
+        """
         osaka.utils.LOGGER.debug("Opening GS handler")
         uri = re.compile("^gs").sub("http", uri)
         parsed = urllib.parse.urlparse(uri)
@@ -47,14 +48,11 @@ class GS(osaka.base.StorageBase):
         kwargs = {}
         check_host = parsed.hostname if not "location" in params else params["location"]
         if not parsed.hostname is None:
-            kwargs["endpoint_url"] = "%s://%s" % (
-                parsed.scheme, parsed.hostname)
+            kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
         else:
-            kwargs["endpoint_url"] = "%s://%s" % (
-                parsed.scheme, kwargs["endpoint_url"])
+            kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, kwargs["endpoint_url"])
         if not parsed.port is None:
-            kwargs["endpoint_url"] = "%s:%s" % (
-                kwargs["endpoint_url"], parsed.port)
+            kwargs["endpoint_url"] = "%s:%s" % (kwargs["endpoint_url"], parsed.port)
         if not parsed.username is None:
             session_kwargs["gcp_access_key_id"] = parsed.username
         elif "gcp_access_key_id" in params:
@@ -71,35 +69,37 @@ class GS(osaka.base.StorageBase):
 
     @staticmethod
     def getSchemes():
-        '''
+        """
         Returns a list of schemes this handler handles
         Note: handling the scheme of another handler produces unknown results
         @returns list of handled schemes
-        '''
+        """
         return ["gs"]
 
     def get(self, uri):
-        '''
+        """
         Gets the URI as a stream
         @param uri: uri to get
-        '''
+        """
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
         container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path)
+            urllib.parse.urlparse(uri).path
+        )
         bucket = self.bucket(container, create=False)
         blob = bucket.blob(key)
         stream = StringIO(blob.download_as_string())
         return stream
 
     def put(self, stream, uri):
-        '''
+        """
         Puts a stream to a URI as a stream
         @param stream: stream to upload
         @param uri: uri to put
-        '''
+        """
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
         container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path)
+            urllib.parse.urlparse(uri).path
+        )
         bucket = self.bucket(container)
         CHUNK_SIZE = 2147221504  # Bytes
         blob = bucket.blob(key, chunk_size=CHUNK_SIZE)
@@ -108,81 +108,96 @@ class GS(osaka.base.StorageBase):
         return blob.size
 
     def size(self, uri):
-        '''
+        """
         Get the size of this object
-        '''
+        """
         osaka.utils.LOGGER.debug("Getting size from URI: {0}".format(uri))
         container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path)
+            urllib.parse.urlparse(uri).path
+        )
         bucket = self.bucket(container, create=False)
         blob = bucket.blob(key)
         raise blob.size
 
     def listAllChildren(self, uri):
-        '''
+        """
         List all children of the current uri
         @param uri: uri to check
-        '''
+        """
         osaka.utils.LOGGER.debug("Running list all children")
         parsed = urllib.parse.urlparse(uri)
         container, key = osaka.utils.get_container_and_path(parsed.path)
         bucket = self.bucket(container, create=False)
         collection = bucket.list_blobs(prefix=key)
-        uriBase = parsed.scheme+"://"+parsed.hostname + \
-            (":"+str(parsed.port) if not parsed.port is None else "")
-        return [uriBase + "/" + container + "/" + item.name for item in collection if item.name == key or item.name.startswith(key+"/")]
+        uriBase = (
+            parsed.scheme
+            + "://"
+            + parsed.hostname
+            + (":" + str(parsed.port) if not parsed.port is None else "")
+        )
+        return [
+            uriBase + "/" + container + "/" + item.name
+            for item in collection
+            if item.name == key or item.name.startswith(key + "/")
+        ]
 
     def exists(self, uri):
-        '''
+        """
         Does the URI exist?
         @param uri: uri to check
-        '''
+        """
         osaka.utils.LOGGER.debug("Does URI {0} exist?".format(uri))
         # A key exists if it has some children
         return len(self.listAllChildren(uri)) > 0
 
     def list(self, uri):
-        '''
+        """
         List URI
         @param uri: uri to list
-        '''
+        """
         depth = len(uri.rstrip("/").split("/"))
-        return [item for item in self.listAllChildren() if len(item.rstrip("/").split("/")) == (depth + 1)]
+        return [
+            item
+            for item in self.listAllChildren()
+            if len(item.rstrip("/").split("/")) == (depth + 1)
+        ]
 
     def isComposite(self, uri):
-        '''
+        """
         Detect if this uri is a composite uri (uri to collection of objects i.e. directory)
         @param uri: uri to list
-        '''
+        """
         osaka.utils.LOGGER.debug("Is URI {0} a directory".format(uri))
         children = self.listAllChildren(uri)
         if len(children) == 0 or (len(children) == 1 and children[0] == uri):
             return False
         return True
 
-    def isObjectStore(self): return True
+    def isObjectStore(self):
+        return True
 
     def close(self):
-        '''
+        """
         Close this backend
-        '''
+        """
         osaka.utils.LOGGER.debug("Closing GS handler")
 
     def rm(self, uri):
-        '''
+        """
         Remove this uri from backend
         @param uri: uri to remove
-        '''
+        """
         container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path)
+            urllib.parse.urlparse(uri).path
+        )
         bucket = self.bucket(container, create=False)
         bucket.delete_blob(key)
 
     def getKeysWithPrefixURI(self, uri):
-        '''
+        """
         Keys with prefix of given URI
         @param uri: prefix URI
-        '''
+        """
         parsed = urllib.parse.urlparse(uri)
         container, key = osaka.utils.get_container_and_path(parsed.path)
         bucket = self.bucket(container, create=False)
@@ -190,10 +205,10 @@ class GS(osaka.base.StorageBase):
         return [item.bucket_name + "/" + item.name for item in collection]
 
     def bucket(self, bucket, create=True):
-        '''
+        """
         Gets the given bucket or makes it
         @param bucket - name of bucket to find
-        '''
+        """
         try:
             return self.gs.get_bucket(bucket)
         except NotFound as e:

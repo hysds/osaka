@@ -21,29 +21,38 @@ import osaka.tests.util
 import requests
 
 requests.packages.urllib3.disable_warnings()
-'''
+"""
 Created on Aug 29, 2016
 
 @author: mstarch
-'''
+"""
 
 
 class SimpleTransferTest(unittest.TestCase):
-
     def test_http_download_to_file(self):
         source_uri = "http://landsat-pds.s3.amazonaws.com/scene_list.gz"
         dest_uri = "scene_list.gz"
 
         try:
-            osaka.main.transfer(source_uri, dest_uri, params={}, measure=False, output="./pge_metrics.json",
-                                lockMetadata={}, retries=0, force=False, ncoop=False, noclobber=False)
+            osaka.main.transfer(
+                source_uri,
+                dest_uri,
+                params={},
+                measure=False,
+                output="./pge_metrics.json",
+                lockMetadata={},
+                retries=0,
+                force=False,
+                ncoop=False,
+                noclobber=False,
+            )
         finally:
             os.remove(dest_uri)
 
 
 # TODO: fix unit tests for circleci
 
-#class TransferTest(unittest.TestCase):
+# class TransferTest(unittest.TestCase):
 #    '''
 #    A test that flushes out standard transfer functions between all backends.
 #    Performs the cross-product between the inputs and the outputs.

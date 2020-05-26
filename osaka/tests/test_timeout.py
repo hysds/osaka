@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import absolute_import
 from builtins import str
 from future import standard_library
+
 standard_library.install_aliases()
 import os
 import copy
@@ -13,16 +14,17 @@ import requests.exceptions
 
 import osaka.main
 import osaka.tests.util
-'''
+
+"""
 Created on Oct 31, 2016
 
 @author: mstarch
-'''
+"""
 
 
 # TODO: fix unit tests for circleci
 
-#class TimeoutTest(unittest.TestCase):
+# class TimeoutTest(unittest.TestCase):
 #    '''
 #    A test that setus up high and low timeouts to ensure that the timeouts
 #    work properly.

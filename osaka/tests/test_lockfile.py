@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from builtins import open
 from builtins import str
 from future import standard_library
+
 standard_library.install_aliases()
 import os
 import json
@@ -16,16 +17,17 @@ import requests.exceptions
 
 import osaka.main
 import osaka.tests.util
-'''
+
+"""
 Created on July 27, 2017
 
 @author: mstarch
-'''
+"""
 
 
 # TODO: fix unit tests for circleci
 
-#class LockfileTest(unittest.TestCase):
+# class LockfileTest(unittest.TestCase):
 #    '''
 #    A test that attempts to ensure that the lockfiles are being created and
 #    with the correct standards. That is:
