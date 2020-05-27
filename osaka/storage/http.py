@@ -97,6 +97,10 @@ class HTTP(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug(
             "Got HTTP status code: {}".format(response.status_code)
         )
+
+        # catch 404 status code
+        if response.status_code == 404:
+            raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
         response.raise_for_status()
 
         # catch 202 status code

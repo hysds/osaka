@@ -14,6 +14,7 @@ standard_library.install_aliases()
 import urllib.parse
 import datetime
 import os.path
+import traceback
 import osaka.base
 import osaka.utils
 import osaka.storage.file
@@ -69,9 +70,15 @@ class FTP(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
         filename = urllib.parse.urlparse(uri).path
         fname = "/tmp/osaka-ftp-" + str(datetime.datetime.now())
-        with open(fname, "w") as tmpf:
-            self.ftp.retrbinary("RETR %s" % filename, tmpf.write)
-        fh = open(fname, "r+b")
+        try:
+            with open(fname, "w") as tmpf:
+                self.ftp.retrbinary("RETR %s" % filename, tmpf.write)
+            fh = open(fname, "r+b")
+        except Exception as e:
+            osaka.utils.LOGGER.warning(
+                "Encountered exception: {}\n{}".format(e, traceback.format_exc())
+            )
+            raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
         self.tmpfiles.append(fh)
         fh.seek(0)
         return fh  # obj.get()["Body"]

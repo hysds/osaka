@@ -7,6 +7,7 @@ from future import standard_library
 
 standard_library.install_aliases()
 import re
+import traceback
 from google.cloud import storage
 from google.cloud.exceptions import NotFound
 import urllib.parse
@@ -85,7 +86,13 @@ class GS(osaka.base.StorageBase):
         )
         bucket = self.bucket(container, create=False)
         blob = bucket.blob(key)
-        stream = StringIO(blob.download_as_string())
+        try:
+            stream = StringIO(blob.download_as_string())
+        except Exception as e:
+            osaka.utils.LOGGER.warning(
+                "Encountered exception: {}\n{}".format(e, traceback.format_exc())
+            )
+            raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
         return stream
 
     def put(self, stream, uri):

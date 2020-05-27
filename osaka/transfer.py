@@ -85,17 +85,18 @@ class Transferer(object):
                     )
                     osaka.utils.LOGGER.error(error)
                     raise osaka.utils.NoClobberException(error)
-                if slock.isLocked() and not force:
-                    error = "Source {0} has not completed previous tranfer. Will not continue.".format(
-                        source
-                    )
-                    osaka.utils.LOGGER.error(error)
-                    raise osaka.utils.OsakaException(error)
-                elif slock.isLocked() and force:
-                    error = "Source {0} has not completed previous tranfer. Will continue by force.".format(
-                        source
-                    )
-                    osaka.utils.LOGGER.warning(error)
+                if slock.isLocked():
+                    if force:
+                        error = "Source {0} has not completed previous tranfer. Will continue by force.".format(
+                            source
+                        )
+                        osaka.utils.LOGGER.warning(error)
+                    else:
+                        error = "Source {0} has not completed previous tranfer. Will not continue.".format(
+                            source
+                        )
+                        osaka.utils.LOGGER.error(error)
+                        raise osaka.utils.OsakaException(error)
                 osaka.utils.LOGGER.info(
                     "Transferring between {0} and {1}".format(source, dest)
                 )
@@ -171,14 +172,15 @@ class Transferer(object):
         for retry in range(0, retries + 1):
             try:
                 handle.connect(uri, params)
-                if not unlock and lock.isLocked():
-                    error = "URI {0} has not completed previous tranfer. Will not continue.".format(
-                        uri
-                    )
-                    osaka.utils.LOGGER.error(error)
-                    raise osaka.utils.OsakaException(error)
-                elif lock.isLocked():
-                    lock.unlock()
+                if lock.isLocked():
+                    if not unlock:
+                        error = "URI {0} has not completed previous tranfer. Will not continue.".format(
+                            uri
+                        )
+                        osaka.utils.LOGGER.error(error)
+                        raise osaka.utils.OsakaException(error)
+                    else:
+                        lock.unlock()
 
                 def remove_one(item):
                     """ Remove one item """

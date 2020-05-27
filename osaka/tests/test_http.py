@@ -1,6 +1,4 @@
 import unittest
-import requests.exceptions
-
 import osaka.storage.http
 
 
@@ -36,8 +34,8 @@ class StorageHTTPTest(unittest.TestCase):
         storage_http = osaka.storage.http.HTTP()
         storage_http.connect(test_url)
         self.assertRaisesRegex(
-            requests.exceptions.HTTPError,
-            "404 Client Error.+$",
+            osaka.utils.OsakaFileNotFound,
+            "File {} doesn't exist.".format(test_url),
             storage_http.get,
             test_url,
         )
