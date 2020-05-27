@@ -10,7 +10,6 @@ standard_library.install_aliases()
 import os
 import json
 import socket
-import traceback
 
 # Py2k-3k imports
 try:
@@ -102,12 +101,7 @@ class Lock(object):
             try:
                 filelike = handle.get(self.luri)
                 return json.load(filelike).get(field, None)
-            except Exception as e:
-                osaka.utils.LOGGER.warning(
-                    "Ignoring encountered exception: {}\n{}".format(
-                        e, traceback.format_exc()
-                    )
-                )
+            except osaka.utils.OsakaFileNotFound:
                 return None
 
     def setLockMetadata(self, field, value):

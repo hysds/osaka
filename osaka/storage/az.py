@@ -11,6 +11,7 @@ import re
 import urllib.parse
 import datetime
 import os.path
+import traceback
 import osaka.base
 import osaka.utils
 import osaka.storage.file
@@ -105,7 +106,13 @@ class Azure(osaka.base.StorageBase):
             pass
         fh = open(fname, "r+b")
         self.tmpfiles.append(fh)
-        self.service.get_blob_to_path(container, key, fname)
+        try:
+            self.service.get_blob_to_path(container, key, fname)
+        except Exception as e:
+            osaka.utils.LOGGER.warning(
+                "Encountered exception: {}\n{}".format(e, traceback.format_exc())
+            )
+            raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
         fh.seek(0)
         return fh
 

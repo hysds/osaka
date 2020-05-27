@@ -13,6 +13,8 @@ import os.path
 import stat
 import urllib.parse
 import paramiko
+import traceback
+import osaka.utils
 
 """
 A backend used to handle stfp using parimiko
@@ -120,7 +122,13 @@ class SFTP(object):
         @param path - path to place fetched files
         """
         rpath = urllib.parse.urlparse(url).path
-        self.sftp.get(rpath, path)
+        try:
+            self.sftp.get(rpath, path)
+        except Exception as e:
+            osaka.utils.LOGGER.warning(
+                "Encountered exception: {}\n{}".format(e, traceback.format_exc())
+            )
+            raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(url))
 
     def rm(self, url):
         """

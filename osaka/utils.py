@@ -121,3 +121,7 @@ class TimeoutException(OsakaException):
 
 class NoClobberException(OsakaException):
     pass
+
+
+class OsakaFileNotFound(OsakaException):
+    pass

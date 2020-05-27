@@ -27,6 +27,9 @@ S3 storage connection service
 # S3 region info
 S3_REGION_INFO = None
 
+# regexes
+NOT_FOUND_RE = re.compile(r"Not Found")
+
 
 def get_region_info():
     """
@@ -144,7 +147,15 @@ class S3(osaka.base.StorageBase):
             pass
         fh = open(fname, "r+b")
         self.tmpfiles.append(fh)
-        obj.download_fileobj(fh)
+        try:
+            obj.download_fileobj(fh)
+        except botocore.exceptions.ClientError as e:
+            if NOT_FOUND_RE.search(str(e)):
+                raise osaka.utils.OsakaFileNotFound(
+                    "File {} doesn't exist.".format(uri)
+                )
+            else:
+                raise
         fh.seek(0)
         return fh  # obj.get()["Body"]
 

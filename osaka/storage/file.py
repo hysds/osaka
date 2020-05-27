@@ -62,7 +62,11 @@ class File(osaka.base.StorageBase):
                 "Non-absolute paths and non-null hostnames not supported with 'file://' schemed uris"
             )
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        fh = open(urllib.parse.urlparse(uri).path, "r")
+        path = urllib.parse.urlparse(uri).path
+        try:
+            fh = open(path, "r")
+        except FileNotFoundError:
+            raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
         self.files.append(fh)
         return fh
 
