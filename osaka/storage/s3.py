@@ -121,7 +121,7 @@ class S3(osaka.base.StorageBase):
         return ["s3", "s3s"]
 
     @backoff.on_exception(
-        backoff.expo, Exception, max_value=3, max_time=13,
+        backoff.expo, Exception, factor=4, max_time=64, jitter=backoff.random_jitter
     )
     def reload_obj(self, obj):
         """
