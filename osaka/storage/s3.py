@@ -9,6 +9,7 @@ from future import standard_library
 
 standard_library.install_aliases()
 import re
+import traceback
 import backoff
 import boto3
 import botocore
@@ -121,7 +122,7 @@ class S3(osaka.base.StorageBase):
         return ["s3", "s3s"]
 
     @backoff.on_exception(
-        backoff.expo, Exception, factor=4, max_time=64, jitter=backoff.random_jitter
+        backoff.expo, Exception, factor=4, max_time=32, jitter=backoff.random_jitter
     )
     def reload_obj(self, obj):
         """
@@ -176,8 +177,17 @@ class S3(osaka.base.StorageBase):
             extra = {"ServerSideEncryption": self.encrypt}
         with osaka.storage.file.FileHandlerConversion(stream) as fn:
             obj.upload_file(fn, ExtraArgs=extra)
-        self.reload_obj(obj)
-        return obj.content_length
+        try:
+            self.reload_obj(obj)
+            return obj.content_length
+        except:
+            osaka.utils.LOGGER.warn(
+                "Exponential backoff on getting content length for {} failed. {}.".format(
+                    uri, traceback.format_exc()
+                )
+            )
+            osaka.utils.LOGGER.warn("Trying alternate method.")
+            return self.size(uri)
 
     def listAllChildren(self, uri):
         """
