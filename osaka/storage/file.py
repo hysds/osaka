@@ -64,7 +64,7 @@ class File(osaka.base.StorageBase):
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
         path = urllib.parse.urlparse(uri).path
         try:
-            fh = open(path, "r")
+            fh = open(path, "rb")
         except FileNotFoundError:
             raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
         self.files.append(fh)
