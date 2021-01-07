@@ -74,32 +74,22 @@ class Transferer(object):
                 slock = osaka.lock.Lock(source, shandle)
                 dlock = osaka.lock.Lock(dest, dhandle)
                 if source == dest:
-                    error = "Source, {0}, and destination, {1}, are the same".format(
-                        source, dest
-                    )
+                    error = "Source, {0}, and destination, {1}, are the same".format(source, dest)
                     osaka.utils.LOGGER.error(error)
                     raise osaka.utils.OsakaException(error)
                 elif dhandle.exists(dest) and noclobber:
-                    error = "Destination, {0}, already exists and no-clobber is set".format(
-                        dest
-                    )
+                    error = "Destination, {0}, already exists and no-clobber is set".format(dest)
                     osaka.utils.LOGGER.error(error)
                     raise osaka.utils.NoClobberException(error)
                 if slock.isLocked():
                     if force:
-                        error = "Source {0} has not completed previous tranfer. Will continue by force.".format(
-                            source
-                        )
+                        error = "Source {0} has not completed previous transfer. Will continue by force.".format(source)
                         osaka.utils.LOGGER.warning(error)
                     else:
-                        error = "Source {0} has not completed previous tranfer. Will not continue.".format(
-                            source
-                        )
+                        error = "Source {0} has not completed previous transfer. Will not continue.".format(source)
                         osaka.utils.LOGGER.error(error)
                         raise osaka.utils.OsakaException(error)
-                osaka.utils.LOGGER.info(
-                    "Transferring between {0} and {1}".format(source, dest)
-                )
+                osaka.utils.LOGGER.info("Transferring between {0} and {1}".format(source, dest))
                 # Atomically upload the file or files
                 with osaka.cooperator.Cooperator(source, dlock, lockMetadata) as coop:
                     if coop.isPrimary():
@@ -127,7 +117,7 @@ class Transferer(object):
         else:
             raise err
         if measure and metrics is not None:
-            self.writeMetrics(metrics, metricsOutput)
+            self.write_metrics(metrics, metricsOutput)
 
     def transfer_uri(self, source, shandle, dest, dhandle):
         """
@@ -174,9 +164,7 @@ class Transferer(object):
                 handle.connect(uri, params)
                 if lock.isLocked():
                     if not unlock:
-                        error = "URI {0} has not completed previous tranfer. Will not continue.".format(
-                            uri
-                        )
+                        error = "URI {0} has not completed previous transfer. Will not continue.".format(uri)
                         osaka.utils.LOGGER.error(error)
                         raise osaka.utils.OsakaException(error)
                     else:
@@ -198,9 +186,9 @@ class Transferer(object):
             finally:
                 handle.close()
         else:
-            raise
+            raise RuntimeError("No osaka attempts made (osaka.transfer.remove). raise retries to > -1")
 
-    def writeMetrics(self, metrics, output):
+    def write_metrics(self, metrics, output):
         """
         Write out all the metrics
         @param metrics - metrics collected
@@ -228,7 +216,5 @@ class Transferer(object):
             with open(output, "w") as outputf:
                 json.dump(data, outputf)
         except Exception as e:
-            osaka.utils.LOGGER.warning(
-                "Error merging metrics with: {0} Error: {1}".format(output, str(e))
-            )
+            osaka.utils.LOGGER.warning("Error merging metrics with: {0} Error: {1}".format(output, str(e)))
             raise e

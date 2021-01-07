@@ -152,9 +152,7 @@ class S3(osaka.base.StorageBase):
             obj.download_fileobj(fh)
         except botocore.exceptions.ClientError as e:
             if NOT_FOUND_RE.search(str(e)):
-                raise osaka.utils.OsakaFileNotFound(
-                    "File {} doesn't exist.".format(uri)
-                )
+                raise osaka.utils.OsakaFileNotFound("File {} doesn't exist.".format(uri))
             else:
                 raise
         fh.seek(0)

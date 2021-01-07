@@ -19,6 +19,7 @@ def put(
     output="./pge_metrics.json",
     lockMetadata={},
     retries=0,
+    force=False,
     ncoop=False,
     noclobber=False,
 ):
@@ -43,6 +44,7 @@ def put(
         output,
         lockMetadata,
         retries=retries,
+        force=force,
         ncoop=ncoop,
         noclobber=noclobber,
     )
@@ -209,7 +211,7 @@ def size(url, params={}, retries=0, force=False):
         finally:
             handle.close()
     else:
-        raise
+        raise RuntimeError("No osaka attempts made (osaka.main.size). raise retries to > -1")
 
 
 def list(url, params={}, retries=0, force=False):
@@ -246,7 +248,7 @@ def getChildren(url, params={}, retries=0, force=False):
         finally:
             handle.close()
     else:
-        raise
+        raise RuntimeError("No osaka attempts made (osaka.main.getChildren). raise retries to > -1")
 
 
 def supported(url):

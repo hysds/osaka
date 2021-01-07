@@ -142,7 +142,7 @@ class DAV(osaka.base.StorageBase):
             tmp = self.webdav.exists(path)
             osaka.utils.LOGGER.debug("Does URI {0} exist? {1}".format(uri, tmp))
             return tmp
-        except Exception:
+        except Exception as e:
             pass
         osaka.utils.LOGGER.debug("Failed to check existence using HEAD")
         try:
