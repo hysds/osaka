@@ -24,6 +24,7 @@ setup(
         "configparser>=3.5.0",
         "future>=0.17.1",
         "backoff>=1.3.1",
+        "mock>=4.0.3",
     ],
     entry_points={"console_scripts": ["osaka = osaka.__main__:main"]},
 )
