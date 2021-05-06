@@ -10,7 +10,7 @@ cffi==1.13.2
 chardet==3.0.4
 colorama==0.4.1
 configparser==4.0.2
-cryptography==3.2
+cryptography==3.3.2
 docutils==0.15.2
 easywebdav==1.2.0
 filechunkio==1.6
@@ -29,7 +29,7 @@ pyasn1-modules==0.2.8
 pycparser==2.19
 python-dateutil==2.8.1
 pytz==2019.3
-PyYAML==5.2
+PyYAML==5.4
 requests==2.22.0
 rsa==3.4.2
 s3transfer==0.3.0
