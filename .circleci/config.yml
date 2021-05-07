@@ -12,7 +12,6 @@ jobs:
           name: Test
           command: |
             source $HOME/.bash_profile
-            pip install moto
             python setup.py install
             pytest .
 
