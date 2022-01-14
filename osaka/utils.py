@@ -11,6 +11,8 @@ standard_library.install_aliases()
 import logging
 import subprocess
 import urllib.parse
+import backoff
+import botocore
 
 LOGGER = logging.getLogger("osaka")
 
@@ -101,6 +103,13 @@ def product_composite_iterator(base, handle, callback, include_top=False):
         if include_top:
             uris.append(base)
     return list(map(callback, uris))
+
+
+@backoff.on_exception(
+    backoff.expo, botocore.exceptions.NoCredentialsError, factor=4, max_time=32, jitter=backoff.random_jitter
+)
+def boto_wrapper(f, *args, **kargs):
+    return f(*args, **kargs)
 
 
 class OsakaException(Exception):
