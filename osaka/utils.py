@@ -12,7 +12,7 @@ import logging
 import subprocess
 import urllib.parse
 import backoff
-import botocore
+import botocore.exceptions
 
 LOGGER = logging.getLogger("osaka")
 
