@@ -3,7 +3,7 @@
 
 <div align="center">
     
-  ![](https://user-images.githubusercontent.com/3129134/161153672-fbdf3f50-e856-4406-8a3d-acb3da51a43c.png)
+  ![hysds-logo](https://user-images.githubusercontent.com/3129134/161156679-c3dcec08-b6af-44e4-910c-5ec82ef18649.png)
 
   <h1 align="center">Object-Store Abstraction Architecture (Osaka)</h1>
     
