@@ -2,9 +2,11 @@
 <hr>
 
 <div align="center">
-    <span style="display:block;text-align:center">
-    </span>
-    <h1 align="center">Object-Store Abstraction Architecture (Osaka)</h1>
+    
+  ![](https://user-images.githubusercontent.com/3129134/161153672-fbdf3f50-e856-4406-8a3d-acb3da51a43c.png)
+
+  <h1 align="center">Object-Store Abstraction Architecture (Osaka)</h1>
+    
 </div>
 
 <pre align="center">
