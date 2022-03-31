@@ -102,4 +102,4 @@ See our: [LICENSE](https://github.com/hysds/osaka/blob/develop/LICENSE)
 
 See our: [contributors](https://github.com/hysds/osaka/graphs/contributors)
 
-Key points of contact are: @pymonger
+Key points of contact are: [@pymonger](https://github.com/pymonger)
