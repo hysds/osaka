@@ -28,6 +28,9 @@ S3 storage connection service
 # S3 region info
 S3_REGION_INFO = None
 
+# entry that holds the default region
+DEFAULT_REGION = None
+
 # regexes
 NOT_FOUND_RE = re.compile(r"Not Found")
 
@@ -37,15 +40,18 @@ def get_region_info():
     Return region info dict.
     """
     global S3_REGION_INFO
-    if S3_REGION_INFO is None:
+    global DEFAULT_REGION
+    if S3_REGION_INFO is None and DEFAULT_REGION is None:
         S3_REGION_INFO = {}
+        DEFAULT_REGION = ""
         s = botocore.session.get_session()
+        DEFAULT_REGION = s.get_config_variable('region')
         for part in s.get_available_partitions():
             for region in s.get_available_regions("s3", part):
                 s3 = s.create_client("s3", region)
                 ep = urllib.parse.urlparse(s3.meta.endpoint_url).netloc
                 S3_REGION_INFO[region] = ep
-    return S3_REGION_INFO
+    return S3_REGION_INFO, DEFAULT_REGION
 
 
 class S3(osaka.base.StorageBase):
@@ -58,6 +64,7 @@ class S3(osaka.base.StorageBase):
         Constructor
         """
         self.tmpfiles = []
+        self.is_nominal_sytle = False
 
     def connect(self, uri, params={}):
         """
@@ -72,15 +79,26 @@ class S3(osaka.base.StorageBase):
         session_kwargs = {}
         kwargs = {}
         check_host = parsed.hostname if "location" not in params else params["location"]
-        for region, ep in get_region_info().items():
+        region_info, default_region = get_region_info()
+        found_ep_and_region = False
+        for region, ep in region_info.items():
             if re.search(ep, check_host):
                 kwargs["endpoint_url"] = ep
                 session_kwargs["region_name"] = region
+                found_ep_and_region = True
                 break
-        if parsed.hostname is not None:
-            kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
+        # Use the default region obtained from the sessions object when the
+        # region info was being gathered. This check is used to support the cases
+        # when osaka receives an S3 url in the nominal pathing style.
+        if not found_ep_and_region:
+            kwargs["endpoint_url"] = f"{parsed.scheme}://s3.{default_region}.amazonaws.com"
+            session_kwargs["region_name"] = default_region
+            self.is_nominal_sytle = True
         else:
-            kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, kwargs["endpoint_url"])
+            if parsed.hostname is not None:
+                kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
+            else:
+                kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, kwargs["endpoint_url"])
         if parsed.port is not None and parsed.port != 80 and parsed.port != 443:
             kwargs["endpoint_url"] = "%s:%s" % (kwargs["endpoint_url"], parsed.port)
         if parsed.username is not None:
@@ -138,9 +156,7 @@ class S3(osaka.base.StorageBase):
         @param uri: uri to get
         """
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path
-        )
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
         bucket = self.bucket(container, create=False)
         obj = bucket.Object(key)
         fname = "/tmp/osaka-s3-" + str(datetime.datetime.now())
@@ -167,9 +183,7 @@ class S3(osaka.base.StorageBase):
         @param uri: uri to put
         """
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
-        container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path
-        )
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
         bucket = self.bucket(container)
         obj = bucket.Object(key)
         extra = {}
@@ -200,15 +214,20 @@ class S3(osaka.base.StorageBase):
         if "__top__" in self.cache and uri == self.cache["__top__"]:
             return [k for k in list(self.cache.keys()) if k != "__top__"]
         parsed = urllib.parse.urlparse(uri)
-        container, key = osaka.utils.get_container_and_path(parsed.path)
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
         bucket = self.bucket(container, create=False)
         collection = bucket.objects.filter(Prefix=key)
-        uriBase = (
-            parsed.scheme
-            + "://"
-            + parsed.hostname
-            + (":" + str(parsed.port) if parsed.port is not None else "")
-        )
+        if self.is_nominal_sytle:
+            # Needs only 1 slash because the 2nd one gets added when the "full"
+            # value gets put together
+            uriBase = f"{parsed.scheme}:/"
+        else:
+            uriBase = (
+                parsed.scheme
+                + "://"
+                + parsed.hostname
+                + (":" + str(parsed.port) if parsed.port is not None else "")
+            )
         # Setup cache, and fill it with listings
         self.cache["__top__"] = uri
         for item in collection:
@@ -236,7 +255,7 @@ class S3(osaka.base.StorageBase):
         depth = len(uri.rstrip("/").split("/"))
         return [
             item
-            for item in self.listAllChildren()
+            for item in self.listAllChildren(uri)
             if len(item.rstrip("/").split("/")) == (depth + 1)
         ]
 
@@ -297,9 +316,7 @@ class S3(osaka.base.StorageBase):
         Remove this uri from backend
         @param uri: uri to remove
         """
-        container, key = osaka.utils.get_container_and_path(
-            urllib.parse.urlparse(uri).path
-        )
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
         bucket = self.bucket(container, create=False)
         obj = bucket.Object(key)
         obj.delete()
