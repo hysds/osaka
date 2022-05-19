@@ -5,6 +5,8 @@ from __future__ import absolute_import
 from builtins import open
 from builtins import int
 from builtins import str
+
+import requests.exceptions
 from future import standard_library
 
 standard_library.install_aliases()
@@ -33,6 +35,9 @@ DEFAULT_REGION = None
 
 # regexes
 NOT_FOUND_RE = re.compile(r"Not Found")
+
+# Endpoint used to get the region if an AWS config file isn't found
+AWS_ID_ENDPOINT = "http://169.254.169.254/latest/dynamic/instance-identity/document"
 
 
 def get_region_info():
@@ -91,13 +96,25 @@ class S3(osaka.base.StorageBase):
         # region info was being gathered. This check is used to support the cases
         # when osaka receives an S3 url in the nominal pathing style.
         if not found_ep_and_region:
-            if default_region:
-                ep = region_info.get(default_region)
-                kwargs["endpoint_url"] = f"{parsed.scheme}://{ep}"
-                session_kwargs["region_name"] = default_region
-                self.is_nominal_style = True
-            else:
-                raise osaka.utils.OsakaException(f"No default region specified")
+            if not default_region:
+                # If the default region was not found from the initial boto session, resort
+                # to trying to get that info from the API
+                try:
+                    response = requests.get(AWS_ID_ENDPOINT)
+                    data = response.json()
+                    default_region = data.get("region", None)
+                    if not default_region:
+                        osaka.utils.LOGGER.error(f"No default region found in json response:\n{data}")
+                        raise Exception
+                except Exception as e:
+                    raise osaka.utils.OsakaException(
+                        f"Cannot determine region. Verify that an AWS config file exists and that a region "
+                        f"is set within that file.") from e
+
+            ep = region_info.get(default_region)
+            kwargs["endpoint_url"] = f"{parsed.scheme}://{ep}"
+            session_kwargs["region_name"] = default_region
+            self.is_nominal_style = True
         else:
             if parsed.hostname is not None:
                 kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
