@@ -5,13 +5,10 @@ from osaka import utils
 
 class UtilsTest(unittest.TestCase):
     def setUp(self):
-        self.legacy_s3_url = "s3://s3-us-west-2.amazonaws.com:80/nisar-dev-rs-fwd-mcayanan/products/NEN_L_RRST/" \
-                             "2020/008/NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24"
-        self.nominal_s3_url = "s3://nisar-dev-rs-fwd-mcayanan/products/NEN_L_RRST/" \
-                              "2020/008/NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24"
-        self.expected_container = "nisar-dev-rs-fwd-mcayanan"
-        self.expected_key = "products/NEN_L_RRST/2020/008/" \
-                            "NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24"
+        self.legacy_s3_url = "s3://s3-us-west-2.amazonaws.com:80/my_bucket/foo/bar/key"
+        self.nominal_s3_url = "s3://my_bucket/foo/bar/key"
+        self.expected_container = "my_bucket"
+        self.expected_key = "foo/bar/key"
 
     def test_get_s3_container_and_path_legacy_style(self):
         container, key = utils.get_s3_container_and_path(self.legacy_s3_url)

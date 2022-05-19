@@ -64,7 +64,7 @@ class S3(osaka.base.StorageBase):
         Constructor
         """
         self.tmpfiles = []
-        self.is_nominal_sytle = False
+        self.is_nominal_style = False
 
     def connect(self, uri, params={}):
         """
@@ -93,7 +93,7 @@ class S3(osaka.base.StorageBase):
         if not found_ep_and_region:
             kwargs["endpoint_url"] = f"{parsed.scheme}://s3.{default_region}.amazonaws.com"
             session_kwargs["region_name"] = default_region
-            self.is_nominal_sytle = True
+            self.is_nominal_style = True
         else:
             if parsed.hostname is not None:
                 kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
@@ -156,7 +156,7 @@ class S3(osaka.base.StorageBase):
         @param uri: uri to get
         """
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
-        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_style)
         bucket = self.bucket(container, create=False)
         obj = bucket.Object(key)
         fname = "/tmp/osaka-s3-" + str(datetime.datetime.now())
@@ -183,7 +183,7 @@ class S3(osaka.base.StorageBase):
         @param uri: uri to put
         """
         osaka.utils.LOGGER.debug("Putting stream to URI: {0}".format(uri))
-        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_style)
         bucket = self.bucket(container)
         obj = bucket.Object(key)
         extra = {}
@@ -214,10 +214,10 @@ class S3(osaka.base.StorageBase):
         if "__top__" in self.cache and uri == self.cache["__top__"]:
             return [k for k in list(self.cache.keys()) if k != "__top__"]
         parsed = urllib.parse.urlparse(uri)
-        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_style)
         bucket = self.bucket(container, create=False)
         collection = bucket.objects.filter(Prefix=key)
-        if self.is_nominal_sytle:
+        if self.is_nominal_style:
             # Needs only 1 slash because the 2nd one gets added when the "full"
             # value gets put together
             uriBase = f"{parsed.scheme}:/"
@@ -316,7 +316,7 @@ class S3(osaka.base.StorageBase):
         Remove this uri from backend
         @param uri: uri to remove
         """
-        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_sytle)
+        container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_style)
         bucket = self.bucket(container, create=False)
         obj = bucket.Object(key)
         obj.delete()
