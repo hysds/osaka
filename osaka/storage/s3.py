@@ -91,9 +91,13 @@ class S3(osaka.base.StorageBase):
         # region info was being gathered. This check is used to support the cases
         # when osaka receives an S3 url in the nominal pathing style.
         if not found_ep_and_region:
-            kwargs["endpoint_url"] = f"{parsed.scheme}://s3.{default_region}.amazonaws.com"
-            session_kwargs["region_name"] = default_region
-            self.is_nominal_style = True
+            if default_region:
+                ep = region_info.get(default_region)
+                kwargs["endpoint_url"] = f"{parsed.scheme}://{ep}"
+                session_kwargs["region_name"] = default_region
+                self.is_nominal_style = True
+            else:
+                raise osaka.utils.OsakaException(f"No default region specified")
         else:
             if parsed.hostname is not None:
                 kwargs["endpoint_url"] = "%s://%s" % (parsed.scheme, parsed.hostname)
