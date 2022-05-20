@@ -104,7 +104,7 @@ class S3(osaka.base.StorageBase):
                     data = response.json()
                     default_region = data.get("region", None)
                     if not default_region:
-                        osaka.utils.LOGGER.error(f"No default region found in json response:\n{data}")
+                        osaka.utils.LOGGER.error(f"No 'region' found in json response:\n{data}")
                         raise Exception
                 except Exception as e:
                     raise osaka.utils.OsakaException(
