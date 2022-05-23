@@ -59,6 +59,24 @@ def get_container_and_path(urlpath):
     return (split[0], "" if not len(split) > 1 else split[1])
 
 
+def get_s3_container_and_path(s3_url, is_nominal_style=False):
+    """
+    Gets the s3 container (a.k.a. bucket) and path (a.k.a key) from the
+    given url.
+
+    :param s3_url: The S3 url to parse.
+    :param is_nominal_style: Set to true if the given S3 url is in a
+    nominal style format (i.e. s3://bucket/key). Otherwise, set to false.
+    :return:
+    """
+    parsed = urllib.parse.urlparse(s3_url)
+    if is_nominal_style is True:
+        # If we are dealing with the nominal S3 style path
+        return parsed.hostname, parsed.path.split("/", 1)[1]
+    else:
+        return get_container_and_path(parsed.path)
+
+
 # def walk(func, directory,destdir, *params):
 #    '''
 #    Walk the directory and call the function for each file
