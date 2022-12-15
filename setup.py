@@ -4,12 +4,20 @@ from __future__ import division
 from setuptools import setup, find_packages
 import osaka
 
+
+def readme():
+    with open("README.md") as f:
+        return f.read()
+
+
 setup(
     name="osaka",
     version=osaka.__version__,
-    long_description=osaka.__description__,
+    description=osaka.__description__,
+    long_description_content_type="text/markdown",
+    long_description=readme(),
     url=osaka.__url__,
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests.*", "tests"]),
     include_package_data=True,
     zip_safe=False,
     install_requires=[
@@ -27,5 +35,23 @@ setup(
         "mock>=4.0.3",
         "moto>=2.0.6",
     ],
-    entry_points={"console_scripts": ["osaka = osaka.__main__:main"]},
+    entry_points={
+        "console_scripts": ["osaka = osaka.__main__:main"]
+    },
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: Unix",
+        "Operating System :: MacOS :: MacOS X",
+    ],
 )
