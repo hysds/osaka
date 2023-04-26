@@ -19,6 +19,8 @@ import urllib.parse
 import datetime
 import os.path
 import json
+from uuid import uuid4
+
 import osaka.base
 import osaka.utils
 import osaka.storage.file
@@ -180,7 +182,7 @@ class S3(osaka.base.StorageBase):
         container, key = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=self.is_nominal_style)
         bucket = self.bucket(container, create=False)
         obj = bucket.Object(key)
-        fname = "/tmp/osaka-s3-" + str(datetime.datetime.now())
+        fname = "/tmp/osaka-s3-%s-%s" % (uuid4(), datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f"))
         with open(fname, "w"):
             pass
         fh = open(fname, "r+b")

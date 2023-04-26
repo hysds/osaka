@@ -132,6 +132,10 @@ class Transferer(object):
     def transfer_uri(self, source, shandle, dest, dhandle):
         """
         Transfer a URI recursing into it if it is a composite
+        @param source: Str
+        @param shandle: osaka.storage class instance (source)
+        @param dest: Str
+        @param dhandle: osaka.storage class instance (destination)
         """
         metrics = {
             "source": source,

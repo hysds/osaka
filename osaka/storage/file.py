@@ -15,6 +15,7 @@ import shutil
 import os
 import datetime
 import io
+from uuid import uuid4
 
 import osaka.utils
 import osaka.base
@@ -201,8 +202,8 @@ class FileHandlerConversion(object):
         # If the stream is not a file, make a temporary file out of it
         if self.filename is None or not os.path.exists(self.filename):
             self.handler = File()
-            self.filename = "/tmp/osaka-temporary-" + datetime.datetime.utcnow().strftime(
-                "%Y%m%d%H%M%S.%f"
+            self.filename = "/tmp/osaka-temporary-%s-%s" % (
+                uuid4(), datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f")
             )
             self.handler.connect(self.filename)
             self.handler.put(stream, self.filename)
