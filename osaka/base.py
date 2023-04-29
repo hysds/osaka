@@ -60,6 +60,7 @@ class StorageBase(object):
 
         for cls in clazz.__subclasses__():
             types = cls.getSchemes()
+            print(cls, types)
             osaka.utils.LOGGER.debug(
                 "Found storage backend: {0} handling {1}".format(cls.__name__, types)
             )
@@ -71,9 +72,10 @@ class StorageBase(object):
         """
         Connects to the backend
         """
-        raise osaka.utils.OsakaException(
-            "{0} does not implement 'connection' call".format(type(self).__name__)
-        )
+        # raise osaka.utils.OsakaException(
+        #     "{0} does not implement 'connection' call".format(type(self).__name__)
+        # )
+        pass
 
     def get(self, uri):
         """

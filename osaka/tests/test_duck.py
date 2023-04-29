@@ -36,7 +36,8 @@ class DuckTest(unittest.TestCase):
         }
         # Loop through the classes found by loading the backends and
         # ensure they are up-to-spec
-        for scheme, clazz in osaka.base.StorageBase.loadBackends().items():
+        sb = osaka.base.StorageBase()
+        for scheme, clazz in sb.loadBackends().items():
             # Loop through all definitions making sure they exist in the specification
             for func, values in definitions.items():
                 try:

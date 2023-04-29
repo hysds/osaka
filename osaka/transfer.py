@@ -61,8 +61,12 @@ class Transferer(object):
             "Opening connections for {0} and {1}".format(source, dest)
         )
         # Get handlers for the source and destination
-        shandle = osaka.base.StorageBase.getStorageBackend(source)
-        dhandle = osaka.base.StorageBase.getStorageBackend(dest)
+        shandle_sb = osaka.base.StorageBase()
+        dhandle_sb = osaka.base.StorageBase()
+
+        shandle = shandle_sb.getStorageBackend(source)
+        dhandle = dhandle_sb.getStorageBackend(dest)
+
         err = RuntimeError("Max retries reached but true exception not preserved.")
         for retry in range(0, retries + 1):
             try:
@@ -171,7 +175,9 @@ class Transferer(object):
         """
         uri = uri.rstrip("/")
         osaka.utils.LOGGER.info("Removing URI {0}".format(uri))
-        handle = osaka.base.StorageBase.getStorageBackend(uri)
+
+        sb = osaka.base.StorageBase()
+        handle = sb.getStorageBackend(uri)
         lock = osaka.lock.Lock(uri, handle)
         for retry in range(0, retries + 1):
             try:

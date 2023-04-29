@@ -167,7 +167,8 @@ class PermTemp(object):
             osaka.utils.LOGGER.debug(
                 "Opening handler for lock-uri {0}".format(self.luri)
             )
-            self.handle = osaka.base.StorageBase.getStorageBackend(self.luri)
+            sb = osaka.base.StorageBase()
+            self.handle = sb.getStorageBackend(self.luri)
             self.handle.connect(self.luri, params)
             return
         self.handle = handle

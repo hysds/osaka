@@ -9,6 +9,7 @@ standard_library.install_aliases()
 import osaka.base
 import osaka.utils
 import osaka.transfer
+import osaka.lock
 
 
 def put(
@@ -173,7 +174,8 @@ def exists(url, params={}):
     @param url: url to check
     @param params: params to pass-in 
     """
-    backend = osaka.base.StorageBase.getStorageBackend(url)
+    sb = osaka.base.StorageBase()
+    backend = sb.getStorageBackend(url)
     backend.connect(url, params)
     return backend.exists(url)
 
@@ -184,7 +186,9 @@ def size(url, params={}, retries=0, force=False):
     """
     uri = url.rstrip("/")
     osaka.utils.LOGGER.info("Sizing URI {0}".format(uri))
-    handle = osaka.base.StorageBase.getStorageBackend(uri)
+
+    sb = osaka.base.StorageBase()
+    handle = sb.getStorageBackend(uri)
     lock = osaka.lock.Lock(uri, handle)
     for retry in range(0, retries + 1):
         try:
@@ -222,7 +226,8 @@ def getChildren(url, params={}, retries=0, force=False):
     """
     uri = url.rstrip("/")
     osaka.utils.LOGGER.info("Get all children URI {0}".format(uri))
-    handle = osaka.base.StorageBase.getStorageBackend(uri)
+    sb = osaka.base.StorageBase()
+    handle = sb.getStorageBackend(uri)
     lock = osaka.lock.Lock(uri, handle)
     for retry in range(0, retries + 1):
         try:
@@ -256,6 +261,7 @@ def supported(url):
     """
     osaka.utils.LOGGER.info("Checking for backend supporting {0}".format(url))
     try:
-        return not osaka.base.StorageBase.getStorageBackend(url) is None
+        sb = osaka.base.StorageBase()
+        return not sb.getStorageBackend(url) is None
     except osaka.utils.OsakaException:
         return False
