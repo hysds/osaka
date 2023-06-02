@@ -65,6 +65,8 @@ class S3(osaka.base.StorageBase):
     """
     Handles S3 file copies
     """
+    session = None
+    credentials = None
 
     def __init__(self):
         """
@@ -78,6 +80,17 @@ class S3(osaka.base.StorageBase):
         Connects to the backend
         @param uri - s3s or s3 uri for resource
         @param params - optional, may contain: location, aws_access_key_id, aws_secret_access_key
+
+        TODO: need to figure out a way to handle multiple regions and caching
+          maybe we can store a static dictionary variable with its region as the key
+          ex.
+              {
+                  "us-west-2": {"session": ..., "credentials": ...},
+                  "us-south-1": {"session": ..., "credentials": ...},
+              }
+          then in the "connect" method we'll check for region (is_nominal_style check) and if cached AND credentials
+              still valid then re-use it from static variable
+          set the class instance variables from the static variable's specific region
         """
         osaka.utils.LOGGER.debug("Opening S3 handler")
         self.cache = {}
@@ -136,19 +149,28 @@ class S3(osaka.base.StorageBase):
             session_kwargs["profile_name"] = params["profile_name"]
         kwargs["use_ssl"] = parsed.scheme == "https"
         self.encrypt = params.get("encrypt", {}).get("type", None)
-        try:
-            osaka.utils.LOGGER.info(
-                "Making session with: {0}".format(json.dumps(session_kwargs))
-            )
-            self.session = boto3.session.Session(**session_kwargs)
-        except botocore.exceptions.ProfileNotFound:
-            osaka.utils.LOGGER.info(
-                "Profile not found. Making session with: {0}".format(
-                    json.dumps(session_kwargs)
+
+        if not S3.session or (S3.credentials and S3.credentials.refresh_needed()):
+            print('#' * 50, "CREATING SESSION...")
+            try:
+                osaka.utils.LOGGER.info("Making session with: {0}".format(json.dumps(session_kwargs)))
+                S3.session = boto3.session.Session(**session_kwargs)
+                self.session = S3.session
+                S3.credentials = S3.session.get_credentials()
+            except botocore.exceptions.ProfileNotFound:
+                osaka.utils.LOGGER.info(
+                    "Profile not found. Making session with: {0}".format(
+                        json.dumps(session_kwargs)
+                    )
                 )
-            )
-            del session_kwargs["profile_name"]
-            self.session = boto3.session.Session(**session_kwargs)
+                del session_kwargs["profile_name"]
+                S3.session = boto3.session.Session(**session_kwargs)
+                self.session = S3.session
+                S3.credentials = S3.session.get_credentials()
+        else:
+            print('#' * 50, "RE-USING SESSION...")
+            self.session = S3.session
+
         self.s3 = self.session.resource("s3", **kwargs)
         if self.s3 is None:
             raise osaka.utils.OsakaException("Failed to connect to S3")
