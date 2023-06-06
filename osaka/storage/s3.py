@@ -15,6 +15,8 @@ import traceback
 import backoff
 import boto3
 import botocore
+import botocore.session
+import botocore.exceptions
 import urllib.parse
 import datetime
 import os.path
@@ -80,17 +82,6 @@ class S3(osaka.base.StorageBase):
         Connects to the backend
         @param uri - s3s or s3 uri for resource
         @param params - optional, may contain: location, aws_access_key_id, aws_secret_access_key
-
-        TODO: need to figure out a way to handle multiple regions and caching
-          maybe we can store a static dictionary variable with its region as the key
-          ex.
-              {
-                  "us-west-2": {"session": ..., "credentials": ...},
-                  "us-south-1": {"session": ..., "credentials": ...},
-              }
-          then in the "connect" method we'll check for region (is_nominal_style check) and if cached AND credentials
-              still valid then re-use it from static variable
-          set the class instance variables from the static variable's specific region
         """
         osaka.utils.LOGGER.debug("Opening S3 handler")
         self.cache = {}
@@ -150,8 +141,7 @@ class S3(osaka.base.StorageBase):
         kwargs["use_ssl"] = parsed.scheme == "https"
         self.encrypt = params.get("encrypt", {}).get("type", None)
 
-        if not S3.session or (S3.credentials and S3.credentials.refresh_needed()):
-            print('#' * 50, "CREATING SESSION...")
+        if not S3.session or S3._check_credentials():
             try:
                 osaka.utils.LOGGER.info("Making session with: {0}".format(json.dumps(session_kwargs)))
                 S3.session = boto3.session.Session(**session_kwargs)
@@ -168,7 +158,6 @@ class S3(osaka.base.StorageBase):
                 self.session = S3.session
                 S3.credentials = S3.session.get_credentials()
         else:
-            print('#' * 50, "RE-USING SESSION...")
             self.session = S3.session
 
         self.s3 = self.session.resource("s3", **kwargs)
@@ -194,6 +183,22 @@ class S3(osaka.base.StorageBase):
         @param obj: boto3 S3 Object object
         """
         obj.load()
+
+    @staticmethod
+    def _check_credentials():
+        """
+        botocore, depending on how it grabs the credentials will have a "refresh_needed" method
+        if the "refresh_method" is not found then we'll return a True to create a new session
+        else; check refresh_needed() if the token has expired
+        @return: Boolean
+        """
+        if hasattr(S3.credentials, "refresh_needed"):
+            if S3.credentials.refresh_needed():
+                return True
+            else:
+                return False
+        else:
+            return True
 
     def get(self, uri):
         """
