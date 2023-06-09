@@ -15,6 +15,8 @@ import traceback
 import backoff
 import boto3
 import botocore
+import botocore.session
+import botocore.exceptions
 import urllib.parse
 import datetime
 import os.path
@@ -65,6 +67,8 @@ class S3(osaka.base.StorageBase):
     """
     Handles S3 file copies
     """
+    session = None
+    credentials = None
 
     def __init__(self):
         """
@@ -136,19 +140,26 @@ class S3(osaka.base.StorageBase):
             session_kwargs["profile_name"] = params["profile_name"]
         kwargs["use_ssl"] = parsed.scheme == "https"
         self.encrypt = params.get("encrypt", {}).get("type", None)
-        try:
-            osaka.utils.LOGGER.info(
-                "Making session with: {0}".format(json.dumps(session_kwargs))
-            )
-            self.session = boto3.session.Session(**session_kwargs)
-        except botocore.exceptions.ProfileNotFound:
-            osaka.utils.LOGGER.info(
-                "Profile not found. Making session with: {0}".format(
-                    json.dumps(session_kwargs)
+
+        if not S3.session or S3._check_credentials():
+            try:
+                osaka.utils.LOGGER.info("Making session with: {0}".format(json.dumps(session_kwargs)))
+                S3.session = boto3.session.Session(**session_kwargs)
+                self.session = S3.session
+                S3.credentials = S3.session.get_credentials()
+            except botocore.exceptions.ProfileNotFound:
+                osaka.utils.LOGGER.info(
+                    "Profile not found. Making session with: {0}".format(
+                        json.dumps(session_kwargs)
+                    )
                 )
-            )
-            del session_kwargs["profile_name"]
-            self.session = boto3.session.Session(**session_kwargs)
+                del session_kwargs["profile_name"]
+                S3.session = boto3.session.Session(**session_kwargs)
+                self.session = S3.session
+                S3.credentials = S3.session.get_credentials()
+        else:
+            self.session = S3.session
+
         self.s3 = self.session.resource("s3", **kwargs)
         if self.s3 is None:
             raise osaka.utils.OsakaException("Failed to connect to S3")
@@ -172,6 +183,22 @@ class S3(osaka.base.StorageBase):
         @param obj: boto3 S3 Object object
         """
         obj.load()
+
+    @staticmethod
+    def _check_credentials():
+        """
+        botocore, depending on how it grabs the credentials will have a "refresh_needed" method
+        if the "refresh_method" is not found then we'll return a True to create a new session
+        else; check refresh_needed() if the token has expired
+        @return: Boolean
+        """
+        if hasattr(S3.credentials, "refresh_needed"):
+            if S3.credentials.refresh_needed():
+                return True
+            else:
+                return False
+        else:
+            return True
 
     def get(self, uri):
         """
