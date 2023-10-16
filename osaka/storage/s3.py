@@ -85,7 +85,7 @@ class S3(osaka.base.StorageBase):
         """
         osaka.utils.LOGGER.debug("Opening S3 handler")
         self.cache = {}
-        uri = re.compile(r'^s3s?').sub("https", uri)
+        uri = re.compile(r'^s3s?').sub("http", uri)
         parsed = urllib.parse.urlparse(uri)
         session_kwargs = {}
         kwargs = {}
