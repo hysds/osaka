@@ -9,7 +9,6 @@ standard_library.install_aliases()
 import osaka.base
 import osaka.utils
 import osaka.transfer
-import logging
 
 
 def put(
@@ -260,10 +259,3 @@ def supported(url):
         return not osaka.base.StorageBase.getStorageBackend(url) is None
     except osaka.utils.OsakaException:
         return False
-
-
-if __name__ == "__main__":
-    #get("s3://s3-us-west-2.amazonaws.com:80/nisar-dev-rs-fwd-mcayanan/products/NEN_L_RRST/2020/008/NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24", "./NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24")
-    get("s3://nisar-dev-rs-fwd-mcayanan/products/NEN_L_RRST/2020/008/NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24", "./NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24")
-    #get("s3://swot-dev-rs-fwd-mcayanan/products/L1B_HR_SLC/2021/06/12/SWOT_L1B_HR_SLC_001_004_002R_20210612T061500_20210612T064459_PG99_01/SWOT_L1B_HR_SLC_001_004_002R_20210612T061500_20210612T064459_PG99_01.nc", "./SWOT_L1B_HR_SLC_001_004_002R_20210612T061500_20210612T064459_PG99_01.nc")
-    #put("./NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24", "s3://s3-us-west-2.amazonaws.com:80/swot-dev-osl-reproc-mcayanan/NISAR_S198_ASF_AS4_M00_P00114_R00_C00_G00_2020_008_08_00_00_000000000.vc24")
