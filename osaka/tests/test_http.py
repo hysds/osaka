@@ -4,7 +4,7 @@ import osaka.storage.http
 
 class StorageHTTPTest(unittest.TestCase):
     def test_isComposite_with_binary_file(self):
-        test_url = "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/atoms/files/Landsat_Data_Policy.pdf"
+        test_url = "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/images/kilauea17_0.png"
 
         storage_http = osaka.storage.http.HTTP()
         try:
