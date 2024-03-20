@@ -12,7 +12,7 @@ jobs:
           name: Test
           command: |
             source $HOME/.bash_profile
-            python setup.py install
+            pip install -e .
             pytest .
   build:
     docker:

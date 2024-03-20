@@ -26,8 +26,8 @@ Created on Aug 29, 2016
 
 class SimpleTransferTest(unittest.TestCase):
     def test_http_download_to_file(self):
-        source_uri = "http://landsat-pds.s3.amazonaws.com/scene_list.gz"
-        dest_uri = "scene_list.gz"
+        source_uri = "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/images/kilauea17_0.png"
+        dest_uri = "kilauea17_0.png"
 
         try:
             osaka.main.transfer(

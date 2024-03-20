@@ -1,7 +1,7 @@
 import io
 import unittest
 from mock import patch
-from moto import mock_s3
+from moto import mock_aws
 import botocore
 from botocore.exceptions import ClientError
 import boto3
@@ -36,14 +36,14 @@ def counted_mock_make_api_call(self, operation_name, kwarg):
 
 
 class StorageS3Test(unittest.TestCase):
-    @mock_s3
+    @mock_aws
     def setUp(self):
         """Setup."""
 
         self.test_url = "s3://s3.us-west-2.amazonaws.com/landsat-pds/scene_list.gz"
         self.s3 = boto3.client("s3", region_name="us-west-2")
 
-    @mock_s3
+    @mock_aws
     def test_s3_get(self):
         """Test get from S3."""
 
@@ -60,7 +60,7 @@ class StorageS3Test(unittest.TestCase):
         assert fh.read().decode() == "test_s3_get"
         storage_s3.close()
 
-    @mock_s3
+    @mock_aws
     def test_s3_put(self):
         """Test put to S3."""
 
@@ -76,7 +76,7 @@ class StorageS3Test(unittest.TestCase):
         obj = self.s3.get_object(Bucket="landsat-pds", Key="scene_list.gz")
         assert obj["Body"].read().decode() == "test_s3_put"
 
-    @mock_s3
+    @mock_aws
     def test_s3_eventual_consistency_error(self):
         """Test exponential backoff works to retry object
            metadata reload for some time and eventually bubbles up the exception."""
@@ -94,7 +94,7 @@ class StorageS3Test(unittest.TestCase):
                 f = io.StringIO("test_s3_eventual_consistency_error")
                 storage_s3.put(f, self.test_url)
 
-    @mock_s3
+    @mock_aws
     def test_s3_eventual_consistency_handling(self):
         """Test exponential backoff works to retry object metadata reload for some time and 
            eventually succeeds."""
