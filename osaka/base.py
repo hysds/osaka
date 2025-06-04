@@ -3,10 +3,7 @@ Created on Apr 27, 2016
 
 @author: mstarch
 """
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
+
 from future import standard_library
 
 standard_library.install_aliases()
@@ -34,11 +31,23 @@ class StorageBase(object):
         @param uri: uri for which to get a backend
         """
         clazz.loadBackends()
-        searching = urllib.parse.urlparse(uri).scheme.rstrip("://")
+        scheme = urllib.parse.urlparse(uri).scheme
         try:
-            return clazz.map[searching]()
+            return clazz.map[scheme]()
+        except KeyError:
+            # Try with the other protocol (http/https)
+            if scheme == 'https':
+                scheme = 'http'
+            elif scheme == 'http':
+                scheme = 'https'
+            try:
+                return clazz.map[scheme]()
+            except KeyError:
+                err = "No backend found for scheme: {0}".format(scheme)
+                osaka.utils.LOGGER.error(err)
+                raise osaka.utils.OsakaException(err)
         except Exception as e:
-            err = "Failed to get backend for {0}. Reason: {1}".format(searching, e)
+            err = "Failed to get backend for {0}. Reason: {1}".format(scheme, e)
             osaka.utils.LOGGER.error(err)
             raise osaka.utils.OsakaException(err)
 

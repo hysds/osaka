@@ -12,20 +12,20 @@ class UtilsTest(unittest.TestCase):
 
     def test_get_s3_container_and_path_legacy_style(self):
         container, key = utils.get_s3_container_and_path(self.legacy_s3_url)
-        self.assertEquals(container,
+        self.assertEqual(container,
                           self.expected_container,
                           f"Did not get expected container value: "
                           f"container={container}, expected={self.expected_container}")
-        self.assertEquals(key, self.expected_key, f"Did not get expected key value: key={key}, "
-                                                  f"expected={self.expected_key}")
+        self.assertEqual(key, self.expected_key, f"Did not get expected key value: key={key}, "
+                                              f"expected={self.expected_key}")
 
     def test_get_s3_container_and_path_nominal_style(self):
         container, key = utils.get_s3_container_and_path(self.nominal_s3_url, is_nominal_style=True)
-        self.assertEquals(container, self.expected_container,
+        self.assertEqual(container, self.expected_container,
                           f"Did not get expected container value: "
                           f"container={container}, expected={self.expected_container}")
-        self.assertEquals(key, self.expected_key, f"Did not get expected key value: key={key}, "
-                                                  f"expected={self.expected_key}")
+        self.assertEqual(key, self.expected_key, f"Did not get expected key value: key={key}, "
+                                              f"expected={self.expected_key}")
 
 
 if __name__ == "__main__":

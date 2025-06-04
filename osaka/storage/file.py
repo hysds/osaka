@@ -203,7 +203,7 @@ class FileHandlerConversion(object):
         if self.filename is None or not os.path.exists(self.filename):
             self.handler = File()
             self.filename = "/tmp/osaka-temporary-%s-%s" % (
-                uuid4(), datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f")
+                uuid4(), datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S.%f")
             )
             self.handler.connect(self.filename)
             self.handler.put(stream, self.filename)
