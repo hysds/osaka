@@ -141,7 +141,7 @@ class Transferer(object):
             "source": source,
             "destination": dest,
             "type": "osaka-transfer",
-            "time_start": datetime.datetime.utcnow(),
+            "time_start": datetime.datetime.now(datetime.UTC),
         }
 
         def transfer_one(uri):
@@ -159,7 +159,7 @@ class Transferer(object):
             return count
 
         counts = osaka.utils.product_composite_iterator(source, shandle, transfer_one)
-        metrics["time_end"] = datetime.datetime.utcnow()
+        metrics["time_end"] = datetime.datetime.now(datetime.UTC)
         metrics["size"] = sum(counts)
         return metrics
 
