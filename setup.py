@@ -29,13 +29,13 @@ setup(
         "google-cloud-storage>=2.13.0",
         "backoff>=2.2.1",
         "future>=1.0.0",  # Required for Python 2/3 compatibility
+        'moto>=4.1.0',
+        'mock>=5.1.0',
     ],
     extras_require={
         'test': [
             'pytest>=7.4.0',
             'pytest-cov>=4.1.0',
-            'moto>=4.1.0',
-            'mock>=5.1.0',
         ],
     },
     entry_points={
