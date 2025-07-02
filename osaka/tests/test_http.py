@@ -28,7 +28,8 @@ class StorageHTTPTest(unittest.TestCase):
         # Mock a 202 response
         mock_response = Mock()
         mock_response.status_code = 202
-        mock_response.raise_for_status.side_effect = requests.HTTPError()
+        mock_response.content = b""
+        mock_response.headers = {}
         mock_get.return_value = mock_response
 
         test_url = "https://httpstat.us/202"
