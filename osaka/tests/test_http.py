@@ -14,6 +14,7 @@ class StorageHTTPTest(unittest.TestCase):
             storage_http.close()
 
     def test_200_http_status(self):
+        # Test this
         test_url = "https://httpstat.us/200"
         storage_http = osaka.storage.http.HTTP()
         storage_http.connect(test_url)
