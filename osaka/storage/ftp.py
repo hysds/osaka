@@ -71,7 +71,7 @@ class FTP(osaka.base.StorageBase):
         """
         osaka.utils.LOGGER.debug("Getting stream from URI: {0}".format(uri))
         filename = urllib.parse.urlparse(uri).path
-        fname = "/tmp/osaka-ftp-%s-%s" % (uuid4(), datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f"))
+        fname = "/tmp/osaka-ftp-%s-%s" % (uuid4(), datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S.%f"))
         try:
             with open(fname, "w") as tmpf:
                 self.ftp.retrbinary("RETR %s" % filename, tmpf.write)

@@ -1,5 +1,8 @@
 import unittest
 import osaka.storage.http
+import requests
+
+from unittest.mock import patch, Mock
 
 
 class StorageHTTPTest(unittest.TestCase):
@@ -14,13 +17,21 @@ class StorageHTTPTest(unittest.TestCase):
             storage_http.close()
 
     def test_200_http_status(self):
-        test_url = "https://httpstat.us/200"
+        test_url = "https://example.com"
         storage_http = osaka.storage.http.HTTP()
         storage_http.connect(test_url)
         storage_http.get(test_url)
         storage_http.close()
 
-    def test_202_http_status(self):
+    @patch('osaka.storage.http.requests.Session.get')
+    def test_202_http_status(self, mock_get):
+        # Mock a 202 response
+        mock_response = Mock()
+        mock_response.status_code = 202
+        mock_response.content = b""
+        mock_response.headers = {}
+        mock_get.return_value = mock_response
+
         test_url = "https://httpstat.us/202"
         storage_http = osaka.storage.http.HTTP()
         storage_http.connect(test_url)
@@ -30,7 +41,7 @@ class StorageHTTPTest(unittest.TestCase):
         storage_http.close()
 
     def test_404_http_status(self):
-        test_url = "https://httpstat.us/404"
+        test_url = "https://example.com/nonexistent"
         storage_http = osaka.storage.http.HTTP()
         storage_http.connect(test_url)
         self.assertRaisesRegex(
