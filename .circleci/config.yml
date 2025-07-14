@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: hysds/pge-base:HC-563
+      - image: hysds/pge-base:latest
         auth:
           username: $DOCKER_USER
           password: $DOCKER_PASS
