@@ -76,6 +76,7 @@ class S3(osaka.base.StorageBase):
         """
         self.tmpfiles = []
         self.is_nominal_style = False
+        self.region_cache = {}  # Cache bucket regions to avoid repeated API calls
 
     def connect(self, uri, params={}):
         """
@@ -102,14 +103,35 @@ class S3(osaka.base.StorageBase):
         # region info was being gathered. This check is used to support the cases
         # when osaka receives an S3 url in the nominal pathing style.
         if not found_ep_and_region:
-            if not default_region:
-                # If the default region was not found from the initial boto session, resort
-                # to trying to get that info from the API
+            # Extract bucket name from URI if present
+            bucket_name = None
+            try:
+                container, _ = osaka.utils.get_s3_container_and_path(uri, is_nominal_style=True)
+                bucket_name = container
+            except:
+                pass
+
+            # Try to detect the bucket's actual region
+            detected_region = None
+            if bucket_name:
+                osaka.utils.LOGGER.info(f"Attempting to detect region for bucket: {bucket_name}")
+                # Use the static method to detect region with a region-agnostic client
+                detected_region = S3.get_bucket_region(bucket_name)
+
+                if detected_region:
+                    self.region_cache[bucket_name] = detected_region
+                    osaka.utils.LOGGER.info(f"Detected bucket {bucket_name} in region {detected_region}")
+
+            # Use detected region or fall back to default
+            region_to_use = detected_region if detected_region else default_region
+
+            if not region_to_use:
+                # If still no region, try to get from instance metadata
                 try:
-                    response = requests.get(AWS_ID_ENDPOINT)
+                    response = requests.get(AWS_ID_ENDPOINT, timeout=1)
                     data = response.json()
-                    default_region = data.get("region", None)
-                    if not default_region:
+                    region_to_use = data.get("region", None)
+                    if not region_to_use:
                         osaka.utils.LOGGER.error(f"No 'region' found in json response:\n{data}")
                         raise Exception
                 except Exception as e:
@@ -117,9 +139,9 @@ class S3(osaka.base.StorageBase):
                         f"Cannot determine region. Verify that an AWS config file exists and that a region "
                         f"is set within that file.") from e
 
-            ep = region_info.get(default_region)
+            ep = region_info.get(region_to_use)
             kwargs["endpoint_url"] = f"{parsed.scheme}://{ep}"
-            session_kwargs["region_name"] = default_region
+            session_kwargs["region_name"] = region_to_use
             self.is_nominal_style = True
         else:
             if parsed.hostname is not None:
@@ -199,6 +221,72 @@ class S3(osaka.base.StorageBase):
                 return False
         else:
             return True
+
+    @staticmethod
+    def get_bucket_region(bucket_name, s3_client=None):
+        """
+        Detect the region of an S3 bucket using head_bucket operation.
+
+        @param bucket_name: S3 bucket name
+        @param s3_client: Optional existing S3 client (region-agnostic)
+        @return: AWS region name or None if detection fails
+        """
+        if not s3_client:
+            # Create region-agnostic client for region detection
+            # Using no region allows boto3 to work globally
+            s3_client = boto3.client('s3')
+
+        try:
+            response = s3_client.head_bucket(Bucket=bucket_name)
+            # Region is returned in the response headers
+            region = response['ResponseMetadata']['HTTPHeaders'].get('x-amz-bucket-region')
+            if region:
+                osaka.utils.LOGGER.debug(f"Detected bucket {bucket_name} in region: {region}")
+                return region
+
+            # Fallback: try get_bucket_location if header not present
+            try:
+                location_response = s3_client.get_bucket_location(Bucket=bucket_name)
+                location = location_response.get('LocationConstraint')
+                # get_bucket_location returns None for us-east-1
+                if location is None:
+                    osaka.utils.LOGGER.debug(f"Bucket {bucket_name} detected in us-east-1")
+                    return 'us-east-1'
+                osaka.utils.LOGGER.debug(f"Detected bucket {bucket_name} in region: {location}")
+                return location
+            except Exception as fallback_error:
+                osaka.utils.LOGGER.debug(f"get_bucket_location fallback failed: {fallback_error}")
+
+        except botocore.exceptions.ClientError as e:
+            osaka.utils.LOGGER.warning(f"Failed to detect region for bucket {bucket_name}: {e}")
+
+        return None
+
+    def ensure_correct_region(self, bucket_name):
+        """
+        Ensure the S3 client is configured for the correct bucket region.
+        Recreates the client if needed.
+
+        @param bucket_name: Name of the S3 bucket
+        """
+        # Check if we have this bucket's region cached
+        if bucket_name in self.region_cache:
+            cached_region = self.region_cache[bucket_name]
+        else:
+            # Detect and cache the region
+            cached_region = S3.get_bucket_region(bucket_name, self.s3.meta.client)
+            if cached_region:
+                self.region_cache[bucket_name] = cached_region
+
+        # If we detected a region and it differs from current client region
+        if cached_region and hasattr(self.s3.meta.client, 'meta'):
+            current_region = self.s3.meta.client.meta.region_name
+            if current_region != cached_region:
+                osaka.utils.LOGGER.info(
+                    f"Switching S3 client from region {current_region} to {cached_region} for bucket {bucket_name}"
+                )
+                # Recreate the S3 resource with correct region
+                self.s3 = self.session.resource('s3', region_name=cached_region)
 
     def get(self, uri):
         """
@@ -387,6 +475,9 @@ class S3(osaka.base.StorageBase):
         Gets the given bucket or makes it
         @param bucket - name of bucket to find
         """
+        # Ensure we're using the correct region for this bucket
+        self.ensure_correct_region(bucket)
+
         b = self.s3.Bucket(bucket)
         exists = True
         try:
@@ -396,9 +487,10 @@ class S3(osaka.base.StorageBase):
             if error_code == 404:
                 exists = False
         if exists is False and create:
-            loc = re.sub(r"s3.([^.]+)\..*", r"\g<1>", self.s3.host)
-            if loc == "amazonaws":
-                loc = ""  # handle us-east-1
+            # Use the current client's region for creation
+            loc = self.s3.meta.client.meta.region_name
+            if loc == "us-east-1":
+                loc = ""  # handle us-east-1 special case
             b = osaka.utils.boto_wrapper(self.s3.create_bucket,
                 Bucket=bucket, CreateBucketConfiguration={"LocationConstraint": loc}
             )
