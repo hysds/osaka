@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hysds-osaka"
+dynamic = ["version"]
+description = "Osaka (Object Store Abstraction K Architecture)"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.12"
+authors = [
+    {name = "HySDS", email = "hysds-help@jpl.nasa.gov"}
+]
+keywords = ["hysds", "osaka", "object-store", "s3", "azure", "gcs", "storage"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Operating System :: MacOS :: MacOS X",
+]
+
+dependencies = [
+    # Core dependencies - matching original setup.py order and pins exactly
+    "requests>=2.31.0",
+    "easywebdav>=1.2.0",
+    "azure-storage-blob>=12.18.0",
+    "azure-identity>=1.15.0",
+    "awscli>=1.29.0",
+    "boto3>=1.32.0",
+    "google-cloud-storage>=2.13.0",
+    "backoff>=2.2.1",
+    # Note: 'future>=1.0.0' removed - not needed on Python 3.12+
+    # Note: 'moto>=4.1.0' and 'mock>=5.1.0' moved to test extra
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "moto>=4.1.0",
+    "mock>=5.1.0",
+]
+
+[project.scripts]
+osaka = "osaka.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/hysds/osaka"
+Repository = "https://github.com/hysds/osaka"
+Issues = "https://github.com/hysds/osaka/issues"
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = {version_scheme = "no-guess-dev"}
+
+[tool.hatch.build.targets.wheel]
+packages = ["osaka"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/osaka",
+    "README.md",
+    "LICENSE",
+]
+exclude = [
+    "/osaka/tests",
+]
