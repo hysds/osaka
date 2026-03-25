@@ -4,9 +4,7 @@ Created on Apr 27, 2016
 @author: mstarch
 """
 
-from future import standard_library
 
-standard_library.install_aliases()
 import urllib.parse
 import osaka.utils
 
