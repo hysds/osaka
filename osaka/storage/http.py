@@ -111,6 +111,7 @@ class HTTP(osaka.base.StorageBase):
 
         if text:
             return response.text
+        response.raw.decode_content = True
         return response.raw
 
     def put(self, stream, uri):

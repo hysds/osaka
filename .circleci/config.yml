@@ -12,6 +12,7 @@ jobs:
           name: Test
           command: |
             source $HOME/.bash_profile
+            pip install pytest==7.2.0
             pip install -e .
             pytest .
   build:
